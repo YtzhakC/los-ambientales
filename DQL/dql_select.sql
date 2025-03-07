@@ -139,3 +139,146 @@ WHERE ae.id_area = 1
 ORDER BY ae.cantidad_inventario DESC
 LIMIT 1;
 
+-- Actividades del personal según tipo, áreas asignadas y sueldos
+
+-- 21. Cantidad de personal por rol:
+SELECT rol, COUNT(*) AS cantidad_personal
+FROM Personal
+GROUP BY rol;
+
+-- 22. Sueldo promedio por rol:
+SELECT rol, AVG(sueldo) AS sueldo_promedio
+FROM Personal
+GROUP BY rol;
+
+-- 23. Personal con mayor sueldo:
+SELECT nombre, sueldo
+FROM Personal
+ORDER BY sueldo DESC
+LIMIT 1;
+
+-- 24. Personal con menor sueldo:
+SELECT nombre, sueldo
+FROM Personal
+ORDER BY sueldo ASC
+LIMIT 1;
+
+-- 25. Cantidad de personal por área:
+SELECT a.nombre AS area, COUNT(p.id) AS cantidad_personal
+FROM Area a
+JOIN Proyecto_Investigador pi ON a.id = pi.id_proyecto
+JOIN Personal p ON pi.id_personal = p.id
+GROUP BY a.nombre;
+
+-- 26. Sueldo total por área:
+SELECT a.nombre AS area, SUM(p.sueldo) AS sueldo_total
+FROM Area a
+JOIN Proyecto_Investigador pi ON a.id = pi.id_proyecto
+JOIN Personal p ON pi.id_personal = p.id
+GROUP BY a.nombre;
+
+-- 27. Rol con mayor cantidad de personal:
+SELECT rol, COUNT(*) AS cantidad_personal
+FROM Personal
+GROUP BY rol
+ORDER BY cantidad_personal DESC
+LIMIT 1;
+
+-- 28. Promedio de sueldo por área:
+SELECT a.nombre AS area, AVG(p.sueldo) AS sueldo_promedio
+FROM Area a
+JOIN Proyecto_Investigador pi ON a.id = pi.id_proyecto
+JOIN Personal p ON pi.id_personal = p.id
+GROUP BY a.nombre;
+
+-- 29. Personal asignado a más de un área:
+SELECT p.nombre, COUNT(DISTINCT pi.id_proyecto) AS cantidad_areas
+FROM Personal p
+JOIN Proyecto_Investigador pi ON p.id = pi.id_personal
+GROUP BY p.nombre
+HAVING cantidad_areas > 1;
+
+-- 30. Sueldo promedio del personal asignado a más de un área:
+SELECT AVG(p.sueldo) AS sueldo_promedio
+FROM Personal p
+JOIN Proyecto_Investigador pi ON p.id = pi.id_personal
+GROUP BY p.id
+HAVING COUNT(DISTINCT pi.id_proyecto) > 1;
+
+-- 31. Cantidad de personal por proyecto:
+SELECT pi.id_proyecto, COUNT(pi.id_personal) AS cantidad_personal
+FROM Proyecto_Investigador pi
+GROUP BY pi.id_proyecto;
+
+-- 32. Sueldo total por proyecto:
+SELECT pi.id_proyecto, SUM(p.sueldo) AS sueldo_total
+FROM Proyecto_Investigador pi
+JOIN Personal p ON pi.id_personal = p.id
+GROUP BY pi.id_proyecto;
+
+-- 33. Rol con mayor sueldo promedio:
+SELECT rol, AVG(sueldo) AS sueldo_promedio
+FROM Personal
+GROUP BY rol
+ORDER BY sueldo_promedio DESC
+LIMIT 1;
+
+-- 34. Personal con mayor cantidad de proyectos asignados:
+SELECT p.nombre, COUNT(pi.id_proyecto) AS cantidad_proyectos
+FROM Personal p
+JOIN Proyecto_Investigador pi ON p.id = pi.id_personal
+GROUP BY p.nombre
+ORDER BY cantidad_proyectos DESC
+LIMIT 1;
+
+-- 35. Sueldo promedio del personal con más de un proyecto asignado:
+SELECT AVG(p.sueldo) AS sueldo_promedio
+FROM Personal p
+JOIN Proyecto_Investigador pi ON p.id = pi.id_personal
+GROUP BY p.id
+HAVING COUNT(pi.id_proyecto) > 1;
+
+-- 36. Cantidad de personal por departamento:
+SELECT d.nombre AS departamento, COUNT(p.id) AS cantidad_personal
+FROM Departamento d
+JOIN Departamento_Entidad de ON d.id = de.id_departamento
+JOIN Entidad e ON de.id_entidad = e.id
+JOIN Personal p ON e.id = p.id
+GROUP BY d.nombre;
+
+-- 37. Sueldo total por departamento:
+SELECT d.nombre AS departamento, SUM(p.sueldo) AS sueldo_total
+FROM Departamento d
+JOIN Departamento_Entidad de ON d.id = de.id_departamento
+JOIN Entidad e ON de.id_entidad = e.id
+JOIN Personal p ON e.id = p.id
+GROUP BY d.nombre;
+
+-- 38. Promedio de sueldo por departamento:
+SELECT d.nombre AS departamento, AVG(p.sueldo) AS sueldo_promedio
+FROM Departamento d
+JOIN Departamento_Entidad de ON d.id = de.id_departamento
+JOIN Entidad e ON de.id_entidad = e.id
+JOIN Personal p ON e.id = p.id
+GROUP BY d.nombre;
+
+-- 39. Departamento con mayor cantidad de personal:
+SELECT d.nombre AS departamento, COUNT(p.id) AS cantidad_personal
+FROM Departamento d
+JOIN Departamento_Entidad de ON d.id = de.id_departamento
+JOIN Entidad e ON de.id_entidad = e.id
+JOIN Personal p ON e.id = p.id
+GROUP BY d.nombre
+ORDER BY cantidad_personal DESC
+LIMIT 1;
+
+-- 40. Departamento con mayor sueldo total:
+SELECT d.nombre AS departamento, SUM(p.sueldo) AS sueldo_total
+FROM Departamento d
+JOIN Departamento_Entidad de ON d.id = de.id_departamento
+JOIN Entidad e ON de.id_entidad = e.id
+JOIN Personal p ON e.id = p.id
+GROUP BY d.nombre
+ORDER BY sueldo_total DESC
+LIMIT 1;
+
