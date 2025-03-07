@@ -1,8 +1,6 @@
 USE ambientalistas;
 
-------------------------------------------------------------
 -- 1. Departamento (50 filas)
-------------------------------------------------------------
 INSERT INTO Departamento (nombre) VALUES ('Antioquia');
 INSERT INTO Departamento (nombre) VALUES ('Cundinamarca');
 INSERT INTO Departamento (nombre) VALUES ('Valle del Cauca');
@@ -54,9 +52,7 @@ INSERT INTO Departamento (nombre) VALUES ('Laguna Mística');
 INSERT INTO Departamento (nombre) VALUES ('Río Blanco');
 INSERT INTO Departamento (nombre) VALUES ('Campo Alegre');
 
-------------------------------------------------------------
 -- 2. Entidad (50 filas)
-------------------------------------------------------------
 INSERT INTO Entidad (nombre) VALUES ('Corporación Ambiental Verde');
 INSERT INTO Entidad (nombre) VALUES ('Fundación Naturaleza Viva');
 INSERT INTO Entidad (nombre) VALUES ('EcoAmigos');
@@ -108,9 +104,7 @@ INSERT INTO Entidad (nombre) VALUES ('Cultura Verde');
 INSERT INTO Entidad (nombre) VALUES ('Visión Ambiental');
 INSERT INTO Entidad (nombre) VALUES ('EcoInnovación');
 
-------------------------------------------------------------
 -- 3. Parque (50 filas)
-------------------------------------------------------------
 INSERT INTO Parque (nombre, fecha_declaracion) VALUES ('Parque Nacional Natural Tayrona', '2005-03-15');
 INSERT INTO Parque (nombre, fecha_declaracion) VALUES ('Parque Natural Los Nevados', '2006-04-10');
 INSERT INTO Parque (nombre, fecha_declaracion) VALUES ('Parque Ecológico de la Sabana', '2007-05-20');
@@ -162,9 +156,7 @@ INSERT INTO Parque (nombre, fecha_declaracion) VALUES ('Parque Nacional Natural 
 INSERT INTO Parque (nombre, fecha_declaracion) VALUES ('Parque Natural Tierra y Vida', '2013-03-30');
 INSERT INTO Parque (nombre, fecha_declaracion) VALUES ('Parque Ecológico Campo Alegre', '2014-04-15');
 
-------------------------------------------------------------
 -- 4. Area (50 filas)
-------------------------------------------------------------
 INSERT INTO Area (id_parque, nombre, superficie) VALUES (3, 'Área Bosque Frondoso', 150.75);
 INSERT INTO Area (id_parque, nombre, superficie) VALUES (7, 'Área de Humedales', 89.50);
 INSERT INTO Area (id_parque, nombre, superficie) VALUES (12, 'Área de Montaña', 210.30);
@@ -216,9 +208,7 @@ INSERT INTO Area (id_parque, nombre, superficie) VALUES (47, 'Área de Investiga
 INSERT INTO Area (id_parque, nombre, superficie) VALUES (48, 'Zona de Protección de Recursos', 135.90);
 INSERT INTO Area (id_parque, nombre, superficie) VALUES (49, 'Área de Innovación Ambiental', 145.00);
 
-------------------------------------------------------------
 -- 5. Especie (50 filas)
-------------------------------------------------------------
 INSERT INTO Especie (nombre_cientifico, nombre_vulgar) VALUES ('Quercus robur', 'Roble común');
 INSERT INTO Especie (nombre_cientifico, nombre_vulgar) VALUES ('Pinus sylvestris', 'Pino silvestre');
 INSERT INTO Especie (nombre_cientifico, nombre_vulgar) VALUES ('Eucalyptus globulus', 'Eucalipto');
@@ -270,9 +260,7 @@ INSERT INTO Especie (nombre_cientifico, nombre_vulgar) VALUES ('Lactuca sativa',
 INSERT INTO Especie (nombre_cientifico, nombre_vulgar) VALUES ('Coriandrum sativum', 'Cilantro');
 INSERT INTO Especie (nombre_cientifico, nombre_vulgar) VALUES ('Petroselinum crispum', 'Perejil');
 
-------------------------------------------------------------
 -- 6. Personal (50 filas)
-------------------------------------------------------------
 INSERT INTO Personal (cedula, nombre, direccion, telefono, movil, sueldo, rol) VALUES ('1001', 'Carlos López', 'Calle 12 #34-56, Medellín', '444-1234', '300-1111111', 1500000.00, 'Gestión');
 INSERT INTO Personal (cedula, nombre, direccion, telefono, movil, sueldo, rol) VALUES ('1002', 'María González', 'Carrera 5 #67-89, Bogotá', '444-2345', '300-2222222', 1300000.00, 'Vigilancia');
 INSERT INTO Personal (cedula, nombre, direccion, telefono, movil, sueldo, rol) VALUES ('1003', 'Juan Martínez', 'Avenida 3 #45-67, Cali', '444-3456', '300-3333333', 1200000.00, 'Conservación');
@@ -324,9 +312,7 @@ INSERT INTO Personal (cedula, nombre, direccion, telefono, movil, sueldo, rol) V
 INSERT INTO Personal (cedula, nombre, direccion, telefono, movil, sueldo, rol) VALUES ('1049', 'Catalina Ibáñez', 'Calle 5 #78-90, Neiva', '444-9016', '300-4142431', 1500000.00, 'Gestión');
 INSERT INTO Personal (cedula, nombre, direccion, telefono, movil, sueldo, rol) VALUES ('1050', 'Samuel Andrade', 'Carrera 11 #89-01, Sincelejo', '444-0127', '300-4243441', 1300000.00, 'Vigilancia');
 
-------------------------------------------------------------
 -- 7. Vehiculo (50 filas)
-------------------------------------------------------------
 INSERT INTO Vehiculo (tipo, marca) VALUES ('Camioneta', 'Toyota Hilux');
 INSERT INTO Vehiculo (tipo, marca) VALUES ('Motocicleta', 'Honda');
 INSERT INTO Vehiculo (tipo, marca) VALUES ('4x4', 'Jeep Wrangler');
@@ -378,9 +364,7 @@ INSERT INTO Vehiculo (tipo, marca) VALUES ('Camioneta', 'Nissan X-Trail');
 INSERT INTO Vehiculo (tipo, marca) VALUES ('Motocicleta', 'KTM');
 INSERT INTO Vehiculo (tipo, marca) VALUES ('Camion', 'Scania P-Series');
 
-------------------------------------------------------------
 -- 8. Proyecto_Investigacion (50 filas)
-------------------------------------------------------------
 INSERT INTO Proyecto_Investigacion (presupuesto, fecha_inicio, fecha_fin) VALUES (5000000.00, '2018-01-15', '2018-07-15');
 INSERT INTO Proyecto_Investigacion (presupuesto, fecha_inicio, fecha_fin) VALUES (7500000.00, '2018-02-10', '2018-08-10');
 INSERT INTO Proyecto_Investigacion (presupuesto, fecha_inicio, fecha_fin) VALUES (6200000.00, '2018-03-05', '2018-09-05');
@@ -432,9 +416,7 @@ INSERT INTO Proyecto_Investigacion (presupuesto, fecha_inicio, fecha_fin) VALUES
 INSERT INTO Proyecto_Investigacion (presupuesto, fecha_inicio, fecha_fin) VALUES (7700000.00, '2022-01-10', '2022-07-10');
 INSERT INTO Proyecto_Investigacion (presupuesto, fecha_inicio, fecha_fin) VALUES (8800000.00, '2022-02-05', '2022-08-05');
 
-------------------------------------------------------------
 -- 9. Visitante (50 filas)
-------------------------------------------------------------
 INSERT INTO Visitante (cedula, nombre, direccion, profesion, fecha_entrada, fecha_salida) VALUES ('V001', 'Alejandro Ruiz', 'Calle 15 #23-45, Medellín', 'Ingeniero', '2022-03-01', '2022-03-05');
 INSERT INTO Visitante (cedula, nombre, direccion, profesion, fecha_entrada, fecha_salida) VALUES ('V002', 'Camila Torres', 'Carrera 7 #89-10, Bogotá', 'Arquitecta', '2022-03-02', '2022-03-06');
 INSERT INTO Visitante (cedula, nombre, direccion, profesion, fecha_entrada, fecha_salida) VALUES ('V003', 'Diego Molina', 'Avenida 4 #12-34, Cali', 'Biólogo', '2022-03-03', '2022-03-07');
@@ -486,9 +468,7 @@ INSERT INTO Visitante (cedula, nombre, direccion, profesion, fecha_entrada, fech
 INSERT INTO Visitante (cedula, nombre, direccion, profesion, fecha_entrada, fecha_salida) VALUES ('V049', 'Jorge Vargas', 'Calle 7 #90-12, Medellín', 'Empresario', '2022-04-18', '2022-04-22');
 INSERT INTO Visitante (cedula, nombre, direccion, profesion, fecha_entrada, fecha_salida) VALUES ('V050', 'Daniela López', 'Carrera 5 #01-23, Bogotá', 'Ingeniera', '2022-04-19', '2022-04-23');
 
-------------------------------------------------------------
 -- 10. Alojamiento (50 filas)
-------------------------------------------------------------
 INSERT INTO Alojamiento (id_parque, capacidad, categoria, fecha_ingreso, fecha_salida) VALUES (3, 30, 'Hotel', '2023-05-01', '2023-05-07');
 INSERT INTO Alojamiento (id_parque, capacidad, categoria, fecha_ingreso, fecha_salida) VALUES (7, 20, 'Hostal', '2023-05-02', '2023-05-08');
 INSERT INTO Alojamiento (id_parque, capacidad, categoria, fecha_ingreso, fecha_salida) VALUES (12, 25, 'Cabaña', '2023-05-03', '2023-05-09');
@@ -540,9 +520,7 @@ INSERT INTO Alojamiento (id_parque, capacidad, categoria, fecha_ingreso, fecha_s
 INSERT INTO Alojamiento (id_parque, capacidad, categoria, fecha_ingreso, fecha_salida) VALUES (48, 40, 'Camping', '2023-06-18', '2023-06-24');
 INSERT INTO Alojamiento (id_parque, capacidad, categoria, fecha_ingreso, fecha_salida) VALUES (49, 35, 'Resort', '2023-06-19', '2023-06-25');
 
-------------------------------------------------------------
 -- 11. Departamento_Parque (50 filas)
-------------------------------------------------------------
 INSERT INTO Departamento_Parque (id_departamento, id_parque) VALUES (1, 3);
 INSERT INTO Departamento_Parque (id_departamento, id_parque) VALUES (2, 7);
 INSERT INTO Departamento_Parque (id_departamento, id_parque) VALUES (3, 15);
@@ -594,9 +572,7 @@ INSERT INTO Departamento_Parque (id_departamento, id_parque) VALUES (48, 43);
 INSERT INTO Departamento_Parque (id_departamento, id_parque) VALUES (49, 50);
 INSERT INTO Departamento_Parque (id_departamento, id_parque) VALUES (50, 1);
 
-------------------------------------------------------------
 -- 12. Departamento_Entidad (50 filas)
-------------------------------------------------------------
 INSERT INTO Departamento_Entidad (id_departamento, id_entidad) VALUES (1, 2);
 INSERT INTO Departamento_Entidad (id_departamento, id_entidad) VALUES (2, 4);
 INSERT INTO Departamento_Entidad (id_departamento, id_entidad) VALUES (3, 6);
@@ -648,9 +624,7 @@ INSERT INTO Departamento_Entidad (id_departamento, id_entidad) VALUES (48, 45);
 INSERT INTO Departamento_Entidad (id_departamento, id_entidad) VALUES (49, 47);
 INSERT INTO Departamento_Entidad (id_departamento, id_entidad) VALUES (50, 49);
 
-------------------------------------------------------------
 -- 13. Area_Especie (50 filas)
-------------------------------------------------------------
 -- Fórmula: id_especie = ((id_area * 2) mod 50) + 1, cantidad_inventario = (id_area * 3 + 5)
 INSERT INTO Area_Especie (id_area, id_especie, cantidad_inventario) VALUES (1, 3, 8);
 INSERT INTO Area_Especie (id_area, id_especie, cantidad_inventario) VALUES (2, 5, 11);
@@ -703,9 +677,7 @@ INSERT INTO Area_Especie (id_area, id_especie, cantidad_inventario) VALUES (48, 
 INSERT INTO Area_Especie (id_area, id_especie, cantidad_inventario) VALUES (49, 49, 152);
 INSERT INTO Area_Especie (id_area, id_especie, cantidad_inventario) VALUES (50, 1, 155);
 
-------------------------------------------------------------
 -- 14. Proyecto_Investigador (50 filas)
-------------------------------------------------------------
 INSERT INTO Proyecto_Investigador (id_proyecto, id_personal) VALUES (1, 10);
 INSERT INTO Proyecto_Investigador (id_proyecto, id_personal) VALUES (2, 20);
 INSERT INTO Proyecto_Investigador (id_proyecto, id_personal) VALUES (3, 30);
@@ -757,9 +729,7 @@ INSERT INTO Proyecto_Investigador (id_proyecto, id_personal) VALUES (48, 43);
 INSERT INTO Proyecto_Investigador (id_proyecto, id_personal) VALUES (49, 44);
 INSERT INTO Proyecto_Investigador (id_proyecto, id_personal) VALUES (50, 45);
 
-------------------------------------------------------------
 -- 15. Proyecto_Especie (50 filas)
-------------------------------------------------------------
 INSERT INTO Proyecto_Especie (id_proyecto, id_especie) VALUES (1, 5);
 INSERT INTO Proyecto_Especie (id_proyecto, id_especie) VALUES (2, 10);
 INSERT INTO Proyecto_Especie (id_proyecto, id_especie) VALUES (3, 15);
@@ -811,9 +781,7 @@ INSERT INTO Proyecto_Especie (id_proyecto, id_especie) VALUES (48, 36);
 INSERT INTO Proyecto_Especie (id_proyecto, id_especie) VALUES (49, 41);
 INSERT INTO Proyecto_Especie (id_proyecto, id_especie) VALUES (50, 46);
 
-------------------------------------------------------------
 -- 16. Visitante_Alojamiento (50 filas)
-------------------------------------------------------------
 INSERT INTO Visitante_Alojamiento (id_visitante, id_alojamiento) VALUES (1, 3);
 INSERT INTO Visitante_Alojamiento (id_visitante, id_alojamiento) VALUES (2, 6);
 INSERT INTO Visitante_Alojamiento (id_visitante, id_alojamiento) VALUES (3, 9);
