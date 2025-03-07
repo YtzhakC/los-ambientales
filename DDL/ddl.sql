@@ -49,7 +49,7 @@ CREATE TABLE Vehiculo (
     id_vehiculo INT PRIMARY KEY AUTO_INCREMENT,
     tipo VARCHAR(50) NOT NULL,
     marca VARCHAR(50) NOT NULL
-);333 
+);
 
 -- Tabla de Proyectos de Investigación
 CREATE TABLE Proyecto_Investigacion (

@@ -157,7 +157,7 @@ LosAmbientales
 ├── DDL
 │   └── ddl.sql                   # Script para la creación de la estructura de la base de datos
 ├── DML
-│   └── dml.sql                   # Script para la inserción de datos iniciales
+│   └── dml.sql                   # Script para la inserción de datos
 ├── DQL
 │   ├── dql_select.sql            # Consultas SQL (DQL)
 │   ├── dql_procedimientos.sql    # Procedimientos almacenados
