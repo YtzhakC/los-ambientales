@@ -137,3 +137,59 @@ CREATE TABLE Visitante_Alojamiento (
     FOREIGN KEY (id_visitante) REFERENCES Visitante(id_visitante),
     FOREIGN KEY (id_alojamiento) REFERENCES Alojamiento(id_alojamiento)
 );
+
+-- || ------------------------ TABLAS DQL ------------------------ ||
+-- Tabla de Auditoría para Visitantes
+CREATE TABLE Auditoria_Visitante (
+    id_auditoria INT PRIMARY KEY AUTO_INCREMENT,
+    id_visitante INT NOT NULL,
+    accion VARCHAR(10) NOT NULL,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_visitante) REFERENCES Visitante(id_visitante)
+);
+
+-- Tabla de Auditoría para Personal
+CREATE TABLE Auditoria_Personal (
+    id_auditoria INT PRIMARY KEY AUTO_INCREMENT,
+    id_personal INT NOT NULL,
+    accion VARCHAR(10) NOT NULL,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_personal) REFERENCES Personal(id_personal)
+);
+
+-- Tabla de Auditoría para Vehículos
+CREATE TABLE Auditoria_Vehiculo (
+    id_auditoria INT PRIMARY KEY AUTO_INCREMENT,
+    id_vehiculo INT NOT NULL,
+    accion VARCHAR(10) NOT NULL,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_vehiculo) REFERENCES Vehiculo(id_vehiculo)
+);
+
+-- Tabla de Auditoría para Especies
+CREATE TABLE Auditoria_Especie (
+    id_auditoria INT PRIMARY KEY AUTO_INCREMENT,
+    id_especie INT NOT NULL,
+    accion VARCHAR(10) NOT NULL,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_especie) REFERENCES Especie(id_especie)
+);
+
+-- Tabla de Auditoría para Proyectos
+CREATE TABLE Auditoria_Proyecto (
+    id_auditoria INT PRIMARY KEY AUTO_INCREMENT,
+    id_proyecto INT NOT NULL,
+    accion VARCHAR(10) NOT NULL,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_proyecto) REFERENCES Proyecto_Investigacion(id_proyecto)
+);
+
+-- Tabla de Auditoría para Departamentos
+CREATE TABLE Auditoria_Departamento (
+    id_auditoria INT PRIMARY KEY AUTO_INCREMENT,
+    id_departamento INT NOT NULL,
+    accion VARCHAR(10) NOT NULL,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_departamento) REFERENCES Departamento(id_departamento)
+);
+-- || ------------------------------------------------------------ ||
