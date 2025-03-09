@@ -103,3 +103,104 @@ BEGIN
 END $$
 DELIMITER;
 
+-- Procedimiento 11: Obtener el parque con mayor cantidad de especies
+DELIMITER $$
+CREATE PROCEDURE ParqueConMasEspecies()
+BEGIN
+    SELECT p.nombre AS parque, COUNT(e.id) AS cantidad_especies
+    FROM Parque p
+    JOIN Especie_Parque ep ON p.id = ep.id_parque
+    JOIN Especie e ON ep.id_especie = e.id
+    GROUP BY p.nombre
+    ORDER BY cantidad_especies DESC
+    LIMIT 1;
+END $$
+DELIMITER;
+
+-- Procedimiento 12: Obtener la especie más común en todos los parques
+DELIMITER $$
+CREATE PROCEDURE EspecieMasComun()
+BEGIN
+    SELECT e.nombre AS especie, COUNT(ep.id_parque) AS cantidad_parques
+    FROM Especie e
+    JOIN Especie_Parque ep ON e.id = ep.id_especie
+    GROUP BY e.nombre
+    ORDER BY cantidad_parques DESC
+    LIMIT 1;
+END $$
+DELIMITER;
+
+-- Procedimiento 13: Obtener el total de visitantes en un año específico
+DELIMITER $$
+CREATE PROCEDURE TotalVisitantesPorAnio(IN anio INT)
+BEGIN
+    SELECT COUNT(id) AS total_visitantes
+    FROM Visitante
+    WHERE YEAR(fecha_visita) = anio;
+END $$
+DELIMITER;
+
+-- Procedimiento 14: Obtener el parque con más visitantes
+DELIMITER $$
+CREATE PROCEDURE ParqueConMasVisitantes()
+BEGIN
+    SELECT p.nombre AS parque, COUNT(vp.id_visitante) AS cantidad_visitantes
+    FROM Parque p
+    JOIN Visitante_Parque vp ON p.id = vp.id_parque
+    GROUP BY p.nombre
+    ORDER BY cantidad_visitantes DESC
+    LIMIT 1;
+END $$
+DELIMITER;
+
+-- Procedimiento 15: Obtener el presupuesto promedio de los proyectos de investigación
+DELIMITER $$
+CREATE PROCEDURE PresupuestoPromedioProyectos()
+BEGIN
+    SELECT AVG(presupuesto) AS presupuesto_promedio FROM Proyecto_Investigacion;
+END $$
+DELIMITER;
+
+-- Procedimiento 16: Obtener la cantidad de especies registradas por tipo
+DELIMITER $$
+CREATE PROCEDURE EspeciesPorTipo()
+BEGIN
+    SELECT tipo, COUNT(id) AS cantidad_especies
+    FROM Especie
+    GROUP BY tipo;
+END $$
+DELIMITER;
+
+-- Procedimiento 17: Obtener el alojamiento con mayor capacidad
+DELIMITER $$
+CREATE PROCEDURE AlojamientoMayorCapacidad()
+BEGIN
+    SELECT nombre, capacidad FROM Alojamiento ORDER BY capacidad DESC LIMIT 1;
+END $$
+DELIMITER;
+
+-- Procedimiento 18: Obtener la cantidad total de áreas registradas en parques
+DELIMITER $$
+CREATE PROCEDURE CantidadTotalAreas()
+BEGIN
+    SELECT COUNT(id) AS total_areas FROM Area;
+END $$
+DELIMITER;
+
+-- Procedimiento 19: Obtener el total de sueldos pagados por mes
+DELIMITER $$
+CREATE PROCEDURE TotalSueldosMensuales()
+BEGIN
+    SELECT MONTH(fecha_contratacion) AS mes, SUM(sueldo) AS total_sueldos
+    FROM Personal
+    GROUP BY mes;
+END $$
+DELIMITER;
+
+-- Procedimiento 20: Obtener el total de parques registrados
+DELIMITER $$
+CREATE PROCEDURE TotalParquesRegistrados()
+BEGIN
+    SELECT COUNT(id) AS total_parques FROM Parque;
+END $$
+DELIMITER;
