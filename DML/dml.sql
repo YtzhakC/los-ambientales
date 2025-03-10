@@ -832,3 +832,5 @@ INSERT INTO Visitante_Alojamiento (id_visitante, id_alojamiento) VALUES (47, 41)
 INSERT INTO Visitante_Alojamiento (id_visitante, id_alojamiento) VALUES (48, 44);
 INSERT INTO Visitante_Alojamiento (id_visitante, id_alojamiento) VALUES (49, 47);
 INSERT INTO Visitante_Alojamiento (id_visitante, id_alojamiento) VALUES (50, 50);
+
+-- Hecho por: Ytzhak Carvajal

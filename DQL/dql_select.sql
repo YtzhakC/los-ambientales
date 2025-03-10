@@ -1,705 +1,656 @@
--- 1. Cantidad de parques por departamento:
-SELECT d.nombre AS departamento, COUNT(dp.id_parque) AS cantidad_parques
+-- 1. Cantidad de parques por departamento
+SELECT d.nombre AS departamento, COUNT(p.id_parque) AS cantidad_parques
 FROM Departamento d
-JOIN Departamento_Parque dp ON d.id = dp.id_departamento
+JOIN Departamento_Parque dp ON d.id_departamento = dp.id_departamento
+JOIN Parque p ON dp.id_parque = p.id_parque
 GROUP BY d.nombre;
 
--- 2. Superficie total de parques por departamento:
+-- 2. Superficie total de parques por departamento
 SELECT d.nombre AS departamento, SUM(a.superficie) AS superficie_total
 FROM Departamento d
-JOIN Departamento_Parque dp ON d.id = dp.id_departamento
-JOIN Parque p ON dp.id_parque = p.id
-JOIN Area a ON p.id = a.id_parque
+JOIN Departamento_Parque dp ON d.id_departamento = dp.id_departamento
+JOIN Parque p ON dp.id_parque = p.id_parque
+JOIN Area a ON p.id_parque = a.id_parque
 GROUP BY d.nombre;
 
--- 3. Promedio de superficie de parques por departamento:
-SELECT d.nombre AS departamento, AVG(a.superficie) AS superficie_promedio
-FROM Departamento d
-JOIN Departamento_Parque dp ON d.id = dp.id_departamento
-JOIN Parque p ON dp.id_parque = p.id
-JOIN Area a ON p.id = a.id_parque
-GROUP BY d.nombre;
+-- 3. Inventario de especies por área
+SELECT a.nombre AS area, e.nombre_vulgar AS especie, ae.cantidad_inventario
+FROM Area a
+JOIN Area_Especie ae ON a.id_area = ae.id_area
+JOIN Especie e ON ae.id_especie = e.id_especie;
 
--- 4.  Cantidad de áreas por parque:
-SELECT p.nombre AS parque, COUNT(a.id) AS cantidad_areas
-FROM Parque p
-JOIN Area a ON p.id = a.id_parque
-GROUP BY p.nombre;
-
--- 5. Superficie total de áreas por parque:
-SELECT p.nombre AS parque, SUM(a.superficie) AS superficie_total
-FROM Parque p
-JOIN Area a ON p.id = a.id_parque
-GROUP BY p.nombre;
-
--- 6. Parque con mayor superficie total:
-SELECT p.nombre AS parque, SUM(a.superficie) AS superficie_total
-FROM Parque p
-JOIN Area a ON p.id = a.id_parque
-GROUP BY p.nombre
-ORDER BY superficie_total DESC
-LIMIT 1;
-
--- 7. Departamento con mayor cantidad de parques:
-SELECT d.nombre AS departamento, COUNT(dp.id_parque) AS cantidad_parques
-FROM Departamento d
-JOIN Departamento_Parque dp ON d.id = dp.id_departamento
-GROUP BY d.nombre
-ORDER BY cantidad_parques DESC
-LIMIT 1;
-
--- 8. Parque con mayor cantidad de áreas:
-SELECT p.nombre AS parque, COUNT(a.id) AS cantidad_areas
-FROM Parque p
-JOIN Area a ON p.id = a.id_parque
-GROUP BY p.nombre
-ORDER BY cantidad_areas DESC
-LIMIT 1;
-
--- 9. Superficie promedio de áreas por parque:
-SELECT p.nombre AS parque, AVG(a.superficie) AS superficie_promedio
-FROM Parque p
-JOIN Area a ON p.id = a.id_parque
-GROUP BY p.nombre;
-
--- 10. Cantidad de parques por categoría de alojamiento:
-SELECT a.categoria, COUNT(DISTINCT a.id_parque) AS cantidad_parques
-FROM Alojamiento a
-GROUP BY a.categoria;
-
--- Inventarios de especies por áreas y tipos
-
--- 11. Cantidad de especies por área:
+-- 4. Cantidad de especies por área
 SELECT a.nombre AS area, COUNT(ae.id_especie) AS cantidad_especies
 FROM Area a
-JOIN Area_Especie ae ON a.id = ae.id_area
+JOIN Area_Especie ae ON a.id_area = ae.id_area
 GROUP BY a.nombre;
 
--- 12. Cantidad total de inventario de especies por área:
-SELECT a.nombre AS area, SUM(ae.cantidad_inventario) AS total_inventario
-FROM Area a
-JOIN Area_Especie ae ON a.id = ae.id_area
-GROUP BY a.nombre;
-
--- 13. Área con mayor cantidad de especies:
-SELECT a.nombre AS area, COUNT(ae.id_especie) AS cantidad_especies
-FROM Area a
-JOIN Area_Especie ae ON a.id = ae.id_area
-GROUP BY a.nombre
-ORDER BY cantidad_especies DESC
-LIMIT 1;
-
--- 14. Área con mayor inventario de especies:
-SELECT a.nombre AS area, SUM(ae.cantidad_inventario) AS total_inventario
-FROM Area a
-JOIN Area_Especie ae ON a.id = ae.id_area
-GROUP BY a.nombre
-ORDER BY total_inventario DESC
-LIMIT 1;
-
--- 15. Cantidad de especies por parque:
-SELECT p.nombre AS parque, COUNT(DISTINCT ae.id_especie) AS cantidad_especies
-FROM Parque p
-JOIN Area a ON p.id = a.id_parque
-JOIN Area_Especie ae ON a.id = ae.id_area
-GROUP BY p.nombre;
-
--- 16. Inventario total de especies por parque:
-SELECT p.nombre AS parque, SUM(ae.cantidad_inventario) AS total_inventario
-FROM Parque p
-JOIN Area a ON p.id = a.id_parque
-JOIN Area_Especie ae ON a.id = ae.id_area
-GROUP BY p.nombre;
-
--- 17. Especie con mayor cantidad de inventario:
-SELECT e.nombre_vulgar AS especie, SUM(ae.cantidad_inventario) AS total_inventario
-FROM Especie e
-JOIN Area_Especie ae ON e.id = ae.id_especie
-GROUP BY e.nombre_vulgar
-ORDER BY total_inventario DESC
-LIMIT 1;
-
--- 18. Cantidad de especies por tipo de área:
-SELECT a.nombre AS area, COUNT(DISTINCT ae.id_especie) AS cantidad_especies
-FROM Area a
-JOIN Area_Especie ae ON a.id = ae.id_area
-GROUP BY a.nombre;
-
--- 19. Inventario total de especies por tipo de área:
-SELECT a.nombre AS area, SUM(ae.cantidad_inventario) AS total_inventario
-FROM Area a
-JOIN Area_Especie ae ON a.id = ae.id_area
-GROUP BY a.nombre;
-
--- 20. Especie con mayor cantidad de inventario en un área específica:
-SELECT e.nombre_vulgar AS especie, ae.cantidad_inventario
-FROM Especie e
-JOIN Area_Especie ae ON e.id = ae.id_especie
-WHERE ae.id_area = 1
-ORDER BY ae.cantidad_inventario DESC
-LIMIT 1;
-
--- Actividades del personal según tipo, áreas asignadas y sueldos
-
--- 21. Cantidad de personal por rol:
-SELECT rol, COUNT(*) AS cantidad_personal
+-- 5. Actividades del personal por tipo
+SELECT rol, COUNT(id_personal) AS cantidad_personal
 FROM Personal
 GROUP BY rol;
 
--- 22. Sueldo promedio por rol:
+-- 6. Sueldos promedio del personal por tipo
 SELECT rol, AVG(sueldo) AS sueldo_promedio
 FROM Personal
 GROUP BY rol;
 
--- 23. Personal con mayor sueldo:
+-- 7. Total de presupuesto por departamento
+SELECT d.nombre AS departamento, SUM(pi.presupuesto) AS total_presupuesto
+FROM Departamento d
+JOIN Departamento_Parque dp ON d.id_departamento = dp.id_departamento
+JOIN Parque p ON dp.id_parque = p.id_parque
+JOIN Area a ON p.id_parque = a.id_parque
+JOIN Area_Especie ae ON a.id_area = ae.id_area
+JOIN Proyecto_Especie pe ON ae.id_especie = pe.id_especie
+JOIN Proyecto_Investigacion pi ON pe.id_proyecto = pi.id_proyecto
+GROUP BY d.nombre;
+
+-- 8. Costos totales de proyectos de investigación
+SELECT SUM(presupuesto) AS costo_total
+FROM Proyecto_Investigacion;
+
+-- 9. Cantidad de especies involucradas en proyectos de investigación
+SELECT pr.id_proyecto, COUNT(pe.id_especie) AS cantidad_especies
+FROM Proyecto_Investigacion pr
+JOIN Proyecto_Especie pe ON pr.id_proyecto = pe.id_proyecto
+GROUP BY pr.id_proyecto;
+
+-- 10. Equipos de investigación por proyecto
+SELECT pr.id_proyecto, COUNT(pi.id_personal) AS cantidad_investigadores
+FROM Proyecto_Investigacion pr
+JOIN Proyecto_Investigador pi ON pr.id_proyecto = pi.id_proyecto
+GROUP BY pr.id_proyecto;
+
+-- 11. Gestión de visitantes por parque
+SELECT p.nombre AS parque, COUNT(v.id_visitante) AS cantidad_visitantes
+FROM Parque p
+JOIN Alojamiento a ON p.id_parque = a.id_parque
+JOIN Visitante_Alojamiento va ON a.id_alojamiento = va.id_alojamiento
+JOIN Visitante v ON va.id_visitante = v.id_visitante
+GROUP BY p.nombre;
+
+-- 12. Ocupación de alojamientos por parque
+SELECT p.nombre AS parque, COUNT(a.id_alojamiento) AS cantidad_alojamientos
+FROM Parque p
+JOIN Alojamiento a ON p.id_parque = a.id_parque
+GROUP BY p.nombre;
+
+-- 13. Superficie promedio de áreas por parque
+SELECT p.nombre AS parque, AVG(a.superficie) AS superficie_promedio
+FROM Parque p
+JOIN Area a ON p.id_parque = a.id_parque
+GROUP BY p.nombre;
+
+-- 14. Total de visitantes por mes
+SELECT MONTH(fecha_entrada) AS mes, COUNT(id_visitante) AS cantidad_visitantes
+FROM Visitante
+GROUP BY MONTH(fecha_entrada);
+
+-- 15. Total de visitantes por año
+SELECT YEAR(fecha_entrada) AS año, COUNT(id_visitante) AS cantidad_visitantes
+FROM Visitante
+GROUP BY YEAR(fecha_entrada);
+
+-- 16. Especies más comunes en áreas
+SELECT e.nombre_vulgar AS especie, COUNT(ae.id_area) AS cantidad_areas
+FROM Especie e
+JOIN Area_Especie ae ON e.id_especie = ae.id_especie
+GROUP BY e.nombre_vulgar
+ORDER BY cantidad_areas DESC;
+
+-- 17. Personal con mayor sueldo
 SELECT nombre, sueldo
 FROM Personal
 ORDER BY sueldo DESC
 LIMIT 1;
 
--- 24. Personal con menor sueldo:
+-- 18. Proyectos de investigación más costosos
+SELECT id_proyecto, presupuesto
+FROM Proyecto_Investigacion
+ORDER BY presupuesto DESC
+LIMIT 5;
+
+-- 19. Promedio de duración de proyectos de investigación
+SELECT AVG(DATEDIFF(fecha_fin, fecha_inicio)) AS duracion_promedio
+FROM Proyecto_Investigacion;
+
+-- 20. Total de especies por proyecto de investigación
+SELECT pr.id_proyecto, COUNT(pe.id_especie) AS cantidad_especies
+FROM Proyecto_Investigacion pr
+JOIN Proyecto_Especie pe ON pr.id_proyecto = pe.id_proyecto
+GROUP BY pr.id_proyecto;
+
+-- 21. Total de áreas por parque
+SELECT p.nombre AS parque, COUNT(a.id_area) AS cantidad_areas
+FROM Parque p
+JOIN Area a ON p.id_parque = a.id_parque
+GROUP BY p.nombre;
+
+-- 22. Total de especies por parque
+SELECT p.nombre AS parque, COUNT(DISTINCT ae.id_especie) AS cantidad_especies
+FROM Parque p
+JOIN Area a ON p.id_parque = a.id_parque
+JOIN Area_Especie ae ON a.id_area = ae.id_area
+GROUP BY p.nombre;
+
+-- 23. Personal asignado a proyectos de investigación
+SELECT p.nombre AS personal, COUNT(pi.id_proyecto) AS cantidad_proyectos
+FROM Personal p
+JOIN Proyecto_Investigador pi ON p.id_personal = pi.id_personal
+GROUP BY p.nombre;
+
+-- 24. Visitantes por profesión
+SELECT profesion, COUNT(id_visitante) AS cantidad_visitantes
+FROM Visitante
+GROUP BY profesion;
+
+-- 25. Promedio de ocupación de alojamientos por parque
+SELECT p.nombre AS parque, AVG(a.capacidad) AS capacidad_promedio
+FROM Parque p
+JOIN Alojamiento a ON p.id_parque = a.id_parque
+GROUP BY p.nombre;
+
+-- 26. Cantidad de parques por departamento con más de 5 parques
+SELECT d.nombre AS departamento, COUNT(p.id_parque) AS cantidad_parques
+FROM Departamento d
+JOIN Departamento_Parque dp ON d.id_departamento = dp.id_departamento
+JOIN Parque p ON dp.id_parque = p.id_parque
+GROUP BY d.nombre
+HAVING COUNT(p.id_parque) > 5;
+
+-- 27. Superficie total de parques por departamento con más de 1000 hectáreas
+SELECT d.nombre AS departamento, SUM(a.superficie) AS superficie_total
+FROM Departamento d
+JOIN Departamento_Parque dp ON d.id_departamento = dp.id_departamento
+JOIN Parque p ON dp.id_parque = p.id_parque
+JOIN Area a ON p.id_parque = a.id_parque
+GROUP BY d.nombre
+HAVING SUM(a.superficie) > 1000;
+
+-- 28. Inventario de especies por área con más de 10 especies
+SELECT a.nombre AS area, COUNT(ae.id_especie) AS cantidad_especies
+FROM Area a
+JOIN Area_Especie ae ON a.id_area = ae.id_area
+GROUP BY a.nombre
+HAVING COUNT(ae.id_especie) > 10;
+
+-- 29. Especies por área ordenadas por cantidad de inventario
+SELECT a.nombre AS area, e.nombre_vulgar AS especie, ae.cantidad_inventario
+FROM Area a
+JOIN Area_Especie ae ON a.id_area = ae.id_area
+JOIN Especie e ON ae.id_especie = e.id_especie
+ORDER BY ae.cantidad_inventario DESC;
+
+-- 30. Actividades del personal por tipo con más de 5 empleados
+SELECT rol, COUNT(id_personal) AS cantidad_personal
+FROM Personal
+GROUP BY rol
+HAVING COUNT(id_personal) > 5;
+
+-- 31. Sueldos totales del personal por tipo
+SELECT rol, SUM(sueldo) AS sueldo_total
+FROM Personal
+GROUP BY rol;
+
+-- 32. Cantidad de visitantes por parque y profesión:
+SELECT p.nombre AS parque, v.profesion, COUNT(v.id_visitante) AS cantidad_visitantes
+FROM Parque p
+JOIN Alojamiento a ON p.id_parque = a.id_parque
+JOIN Visitante_Alojamiento va ON a.id_alojamiento = va.id_alojamiento
+JOIN Visitante v ON va.id_visitante = v.id_visitante
+GROUP BY p.nombre, v.profesion;
+
+-- 33. Costos promedio de proyectos de investigación
+SELECT AVG(presupuesto) AS costo_promedio
+FROM Proyecto_Investigacion;
+
+-- 34. Proyectos de investigación con más de 3 especies involucradas
+SELECT pr.id_proyecto, COUNT(pe.id_especie) AS cantidad_especies
+FROM Proyecto_Investigacion pr
+JOIN Proyecto_Especie pe ON pr.id_proyecto = pe.id_proyecto
+GROUP BY pr.id_proyecto
+HAVING COUNT(pe.id_especie) > 3;
+
+-- 35. Equipos de investigación con más de 5 investigadores
+SELECT pr.id_proyecto, COUNT(pi.id_personal) AS cantidad_investigadores
+FROM Proyecto_Investigacion pr
+JOIN Proyecto_Investigador pi ON pr.id_proyecto = pi.id_proyecto
+GROUP BY pr.id_proyecto
+HAVING COUNT(pi.id_personal) > 5;
+
+-- 36. Gestión de visitantes por parque con más de 100 visitantes
+SELECT p.nombre AS parque, COUNT(v.id_visitante) AS cantidad_visitantes
+FROM Parque p
+JOIN Alojamiento a ON p.id_parque = a.id_parque
+JOIN Visitante_Alojamiento va ON a.id_alojamiento = va.id_alojamiento
+JOIN Visitante v ON va.id_visitante = v.id_visitante
+GROUP BY p.nombre
+HAVING COUNT(v.id_visitante) > 100;
+
+-- 37. Ocupación de alojamientos por parque con más de 10 alojamientos
+SELECT p.nombre AS parque, COUNT(a.id_alojamiento) AS cantidad_alojamientos
+FROM Parque p
+JOIN Alojamiento a ON p.id_parque = a.id_parque
+GROUP BY p.nombre
+HAVING COUNT(a.id_alojamiento) > 10;
+
+-- 38. Superficie mínima de áreas por parque
+SELECT p.nombre AS parque, MIN(a.superficie) AS superficie_minima
+FROM Parque p
+JOIN Area a ON p.id_parque = a.id_parque
+GROUP BY p.nombre;
+
+-- 39. Total de visitantes por día
+SELECT fecha_entrada, COUNT(id_visitante) AS cantidad_visitantes
+FROM Visitante
+GROUP BY fecha_entrada;
+
+-- 40. Total de visitantes por semana
+SELECT YEARWEEK(fecha_entrada) AS semana, COUNT(id_visitante) AS cantidad_visitantes
+FROM Visitante
+GROUP BY YEARWEEK(fecha_entrada);
+
+-- 41. Especies menos comunes en áreas
+SELECT e.nombre_vulgar AS especie, COUNT(ae.id_area) AS cantidad_areas
+FROM Especie e
+JOIN Area_Especie ae ON e.id_especie = ae.id_especie
+GROUP BY e.nombre_vulgar
+ORDER BY cantidad_areas ASC;
+
+-- 42. Personal con menor sueldo
 SELECT nombre, sueldo
 FROM Personal
 ORDER BY sueldo ASC
 LIMIT 1;
 
--- 25. Cantidad de personal por área:
-SELECT a.nombre AS area, COUNT(p.id) AS cantidad_personal
-FROM Area a
-JOIN Proyecto_Investigador pi ON a.id = pi.id_proyecto
-JOIN Personal p ON pi.id_personal = p.id
-GROUP BY a.nombre;
+-- 43. Proyectos de investigación menos costosos
+SELECT id_proyecto, presupuesto
+FROM Proyecto_Investigacion
+ORDER BY presupuesto ASC
+LIMIT 5;
 
--- 26. Sueldo total por área:
-SELECT a.nombre AS area, SUM(p.sueldo) AS sueldo_total
-FROM Area a
-JOIN Proyecto_Investigador pi ON a.id = pi.id_proyecto
-JOIN Personal p ON pi.id_personal = p.id
-GROUP BY a.nombre;
+-- 44. Duración máxima de proyectos de investigación
+SELECT MAX(DATEDIFF(fecha_fin, fecha_inicio)) AS duracion_maxima
+FROM Proyecto_Investigacion;
 
--- 27. Rol con mayor cantidad de personal:
-SELECT rol, COUNT(*) AS cantidad_personal
-FROM Personal
-GROUP BY rol
-ORDER BY cantidad_personal DESC
-LIMIT 1;
+-- 45. Total de especies por proyecto de investigación con más de 5 especies
+SELECT pr.id_proyecto, COUNT(pe.id_especie) AS cantidad_especies
+FROM Proyecto_Investigacion pr
+JOIN Proyecto_Especie pe ON pr.id_proyecto = pe.id_proyecto
+GROUP BY pr.id_proyecto
+HAVING COUNT(pe.id_especie) > 5;
 
--- 28. Promedio de sueldo por área:
-SELECT a.nombre AS area, AVG(p.sueldo) AS sueldo_promedio
-FROM Area a
-JOIN Proyecto_Investigador pi ON a.id = pi.id_proyecto
-JOIN Personal p ON pi.id_personal = p.id
-GROUP BY a.nombre;
-
--- 29. Personal asignado a más de un área:
-SELECT p.nombre, COUNT(DISTINCT pi.id_proyecto) AS cantidad_areas
-FROM Personal p
-JOIN Proyecto_Investigador pi ON p.id = pi.id_personal
+-- 46. Total de áreas por parque con más de 3 áreas
+SELECT p.nombre AS parque, COUNT(a.id_area) AS cantidad_areas
+FROM Parque p
+JOIN Area a ON p.id_parque = a.id_parque
 GROUP BY p.nombre
-HAVING cantidad_areas > 1;
+HAVING COUNT(a.id_area) > 3;
 
--- 30. Sueldo promedio del personal asignado a más de un área:
-SELECT AVG(p.sueldo) AS sueldo_promedio
-FROM Personal p
-JOIN Proyecto_Investigador pi ON p.id = pi.id_personal
-GROUP BY p.id
-HAVING COUNT(DISTINCT pi.id_proyecto) > 1;
-
--- 31. Cantidad de personal por proyecto:
-SELECT pi.id_proyecto, COUNT(pi.id_personal) AS cantidad_personal
-FROM Proyecto_Investigador pi
-GROUP BY pi.id_proyecto;
-
--- 32. Sueldo total por proyecto:
-SELECT pi.id_proyecto, SUM(p.sueldo) AS sueldo_total
-FROM Proyecto_Investigador pi
-JOIN Personal p ON pi.id_personal = p.id
-GROUP BY pi.id_proyecto;
-
--- 33. Rol con mayor sueldo promedio:
-SELECT rol, AVG(sueldo) AS sueldo_promedio
-FROM Personal
-GROUP BY rol
-ORDER BY sueldo_promedio DESC
-LIMIT 1;
-
--- 34. Personal con mayor cantidad de proyectos asignados:
-SELECT p.nombre, COUNT(pi.id_proyecto) AS cantidad_proyectos
-FROM Personal p
-JOIN Proyecto_Investigador pi ON p.id = pi.id_personal
+-- 47. Total de especies por parque con más de 10 especies
+SELECT p.nombre AS parque, COUNT(DISTINCT ae.id_especie) AS cantidad_especies
+FROM Parque p
+JOIN Area a ON p.id_parque = a.id_parque
+JOIN Area_Especie ae ON a.id_area = ae.id_area
 GROUP BY p.nombre
-ORDER BY cantidad_proyectos DESC
-LIMIT 1;
+HAVING COUNT(DISTINCT ae.id_especie) > 10;
 
--- 35. Sueldo promedio del personal con más de un proyecto asignado:
-SELECT AVG(p.sueldo) AS sueldo_promedio
+-- 48. Personal asignado a más de un proyecto de investigación
+SELECT p.nombre AS personal, COUNT(pi.id_proyecto) AS cantidad_proyectos
 FROM Personal p
-JOIN Proyecto_Investigador pi ON p.id = pi.id_personal
-GROUP BY p.id
+JOIN Proyecto_Investigador pi ON p.id_personal = pi.id_personal
+GROUP BY p.nombre
 HAVING COUNT(pi.id_proyecto) > 1;
 
--- 36. Cantidad de personal por departamento:
-SELECT d.nombre AS departamento, COUNT(p.id) AS cantidad_personal
-FROM Departamento d
-JOIN Departamento_Entidad de ON d.id = de.id_departamento
-JOIN Entidad e ON de.id_entidad = e.id
-JOIN Personal p ON e.id = p.id
-GROUP BY d.nombre;
+-- 49. Visitantes por profesión con más de 10 visitantes
+SELECT profesion, COUNT(id_visitante) AS cantidad_visitantes
+FROM Visitante
+GROUP BY profesion
+HAVING COUNT(id_visitante) > 10;
 
--- 37. Sueldo total por departamento:
-SELECT d.nombre AS departamento, SUM(p.sueldo) AS sueldo_total
-FROM Departamento d
-JOIN Departamento_Entidad de ON d.id = de.id_departamento
-JOIN Entidad e ON de.id_entidad = e.id
-JOIN Personal p ON e.id = p.id
-GROUP BY d.nombre;
+-- 50. Promedio de ocupación de alojamientos por parque con más de 5 alojamientos
+SELECT p.nombre AS parque, AVG(a.capacidad) AS capacidad_promedio
+FROM Parque p
+JOIN Alojamiento a ON p.id_parque = a.id_parque
+GROUP BY p.nombre
+HAVING COUNT(a.id_alojamiento) > 5;
 
--- 38. Promedio de sueldo por departamento:
-SELECT d.nombre AS departamento, AVG(p.sueldo) AS sueldo_promedio
+-- 51. Cantidad de parques por departamento con menos de 5 parques
+SELECT d.nombre AS departamento, COUNT(p.id_parque) AS cantidad_parques
 FROM Departamento d
-JOIN Departamento_Entidad de ON d.id = de.id_departamento
-JOIN Entidad e ON de.id_entidad = e.id
-JOIN Personal p ON e.id = p.id
-GROUP BY d.nombre;
-
--- 39. Departamento con mayor cantidad de personal:
-SELECT d.nombre AS departamento, COUNT(p.id) AS cantidad_personal
-FROM Departamento d
-JOIN Departamento_Entidad de ON d.id = de.id_departamento
-JOIN Entidad e ON de.id_entidad = e.id
-JOIN Personal p ON e.id = p.id
+JOIN Departamento_Parque dp ON d.id_departamento = dp.id_departamento
+JOIN Parque p ON dp.id_parque = p.id_parque
 GROUP BY d.nombre
-ORDER BY cantidad_personal DESC
-LIMIT 1;
+HAVING COUNT(p.id_parque) < 5;
 
--- 40. Departamento con mayor sueldo total:
-SELECT d.nombre AS departamento, SUM(p.sueldo) AS sueldo_total
+-- 52. Superficie total de parques por departamento con menos de 1000 hectáreas
+SELECT d.nombre AS departamento, SUM(a.superficie) AS superficie_total
 FROM Departamento d
-JOIN Departamento_Entidad de ON d.id = de.id_departamento
-JOIN Entidad e ON de.id_entidad = e.id
-JOIN Personal p ON e.id = p.id
+JOIN Departamento_Parque dp ON d.id_departamento = dp.id_departamento
+JOIN Parque p ON dp.id_parque = p.id_parque
+JOIN Area a ON p.id_parque = a.id_parque
 GROUP BY d.nombre
-ORDER BY sueldo_total DESC
-LIMIT 1;
+HAVING SUM(a.superficie) < 1000;
 
--- Estadísticas de proyectos de investigación: costos, especies involucradas y equipos
-
--- 41. Cantidad de proyectos por especie:
-SELECT e.nombre_vulgar AS especie, COUNT(pe.id_proyecto) AS cantidad_proyectos
-FROM Especie e
-JOIN Proyecto_Especie pe ON e.id = pe.id_especie
-GROUP BY e.nombre_vulgar;
-
--- 42. Costo total de proyectos por especie:
-SELECT e.nombre_vulgar AS especie, SUM(pi.presupuesto) AS costo_total
-FROM Especie e
-JOIN Proyecto_Especie pe ON e.id = pe.id_especie
-JOIN Proyecto_Investigacion pi ON pe.id_proyecto = pi.id
-GROUP BY e.nombre_vulgar;
-
--- 43. Especie con mayor cantidad de proyectos:
-SELECT e.nombre_vulgar AS especie, COUNT(pe.id_proyecto) AS cantidad_proyectos
-FROM Especie e
-JOIN Proyecto_Especie pe ON e.id = pe.id_especie
-GROUP BY e.nombre_vulgar
-ORDER BY cantidad_proyectos DESC
-LIMIT 1;
-
--- 44. Especie con mayor costo total de proyectos:
-SELECT e.nombre_vulgar AS especie, SUM(pi.presupuesto) AS costo_total
-FROM Especie e
-JOIN Proyecto_Especie pe ON e.id = pe.id_especie
-JOIN Proyecto_Investigacion pi ON pe.id_proyecto = pi.id
-GROUP BY e.nombre_vulgar
-ORDER BY costo_total DESC
-LIMIT 1;
-
--- 45. Cantidad de especies involucradas por proyecto:
-SELECT pi.id AS proyecto, COUNT(pe.id_especie) AS cantidad_especies
-FROM Proyecto_Investigacion pi
-JOIN Proyecto_Especie pe ON pi.id = pe.id_proyecto
-GROUP BY pi.id;
-
--- 46. Costo total de proyectos por área:
-SELECT a.nombre AS area, SUM(pi.presupuesto) AS costo_total
+-- 53. Inventario de especies por área con menos de 10 especies
+SELECT a.nombre AS area, COUNT(ae.id_especie) AS cantidad_especies
 FROM Area a
-JOIN Proyecto_Investigador pi ON a.id = pi.id_proyecto
-JOIN Proyecto_Investigacion p ON pi.id_proyecto = p.id
-GROUP BY a.nombre;
-
--- 47. Área con mayor costo total de proyectos:
-SELECT a.nombre AS area, SUM(pi.presupuesto) AS costo_total
-FROM Area a
-JOIN Proyecto_Investigador pi ON a.id = pi.id_proyecto
-JOIN Proyecto_Investigacion p ON pi.id_proyecto = p.id
+JOIN Area_Especie ae ON a.id_area = ae.id_area
 GROUP BY a.nombre
-ORDER BY costo_total DESC
-LIMIT 1;
+HAVING COUNT(ae.id_especie) < 10;
 
--- 48. Cantidad de proyectos por área:
-SELECT a.nombre AS area, COUNT(pi.id_proyecto) AS cantidad_proyectos
+-- 54. Especies por área ordenadas por cantidad de inventario ascendente
+SELECT a.nombre AS area, e.nombre_vulgar AS especie, ae.cantidad_inventario
 FROM Area a
-JOIN Proyecto_Investigador pi ON a.id = pi.id_proyecto
-GROUP BY a.nombre;
+JOIN Area_Especie ae ON a.id_area = ae.id_area
+JOIN Especie e ON ae.id_especie = e.id_especie
+ORDER BY ae.cantidad_inventario ASC;
 
--- 49. Área con mayor cantidad de proyectos:
-SELECT a.nombre AS area, COUNT(pi.id_proyecto) AS cantidad_proyectos
-FROM Area a
-JOIN Proyecto_Investigador pi ON a.id = pi.id_proyecto
-GROUP BY a.nombre
-ORDER BY cantidad_proyectos DESC
-LIMIT 1;
+-- 55. Actividades del personal por tipo con menos de 5 empleados
+SELECT rol, COUNT(id_personal) AS cantidad_personal
+FROM Personal
+GROUP BY rol
+HAVING COUNT(id_personal) < 5;
 
--- 50. Promedio de costo de proyectos por área:
-SELECT a.nombre AS area, AVG(pi.presupuesto) AS costo_promedio
-FROM Area a
-JOIN Proyecto_Investigador pi ON a.id = pi.id_proyecto
-JOIN Proyecto_Investigacion p ON pi.id_proyecto = p.id
-GROUP BY a.nombre;
-
--- 51. Cantidad de proyectos por investigador:
-SELECT p.nombre AS investigador, COUNT(pi.id_proyecto) AS cantidad_proyectos
-FROM Personal p
-JOIN Proyecto_Investigador pi ON p.id = pi.id_personal
-GROUP BY p.nombre;
-
--- 52. Investigador con mayor cantidad de proyectos:
-SELECT p.nombre AS investigador, COUNT(pi.id_proyecto) AS cantidad_proyectos
-FROM Personal p
-JOIN Proyecto_Investigador pi ON p.id = pi.id_personal
-GROUP BY p.nombre
-ORDER BY cantidad_proyectos DESC
-LIMIT 1;
-
--- 53. Costo total de proyectos por investigador:
-SELECT p.nombre AS investigador, SUM(pi.presupuesto) AS costo_total
-FROM Personal p
-JOIN Proyecto_Investigador pi ON p.id = pi.id_personal
-JOIN Proyecto_Investigacion p ON pi.id_proyecto = p.id
-GROUP BY p.nombre;
-
--- 54. Investigador con mayor costo total de proyectos:
-SELECT p.nombre AS investigador, SUM(pi.presupuesto) AS costo_total
-FROM Personal p
-JOIN Proyecto_Investigador pi ON p.id = pi.id_personal
-JOIN Proyecto_Investigacion p ON pi.id_proyecto = p.id
-GROUP BY p.nombre
-ORDER BY costo_total DESC
-LIMIT 1;
-
--- 55. Promedio de costo de proyectos por investigador:
-SELECT p.nombre AS investigador, AVG(pi.presupuesto) AS costo_promedio
-FROM Personal p
-JOIN Proyecto_Investigador pi ON p.id = pi.id_personal
-JOIN Proyecto_Investigacion p ON pi.id_proyecto = p.id
-GROUP BY p.nombre;
-
--- 56. Cantidad de especies involucradas por investigador:
-SELECT p.nombre AS investigador, COUNT(DISTINCT pe.id_especie) AS cantidad_especies
-FROM Personal p
-JOIN Proyecto_Investigador pi ON p.id = pi.id_personal
-JOIN Proyecto_Especie pe ON pi.id_proyecto = pe.id_proyecto
-GROUP BY p.nombre;
-
--- 57. Investigador con mayor cantidad de especies involucradas:
-SELECT p.nombre AS investigador, COUNT(DISTINCT pe.id_especie) AS cantidad_especies
-FROM Personal p
-JOIN Proyecto_Investigador pi ON p.id = pi.id_personal
-JOIN Proyecto_Especie pe ON pi.id_proyecto = pe.id_proyecto
-GROUP BY p.nombre
-ORDER BY cantidad_especies DESC
-LIMIT 1;
-
--- 58. Cantidad de proyectos por entidad:
-SELECT e.nombre AS entidad, COUNT(pi.id_proyecto) AS cantidad_proyectos
-FROM Entidad e
-JOIN Personal p ON e.id = p.id
-JOIN Proyecto_Investigador pi ON p.id = pi.id_personal
-GROUP BY e.nombre;
-
--- 59. Entidad con mayor cantidad de proyectos:
-SELECT e.nombre AS entidad, COUNT(pi.id_proyecto) AS cantidad_proyectos
-FROM Entidad e
-JOIN Personal p ON e.id = p.id
-JOIN Proyecto_Investigador pi ON p.id = pi.id_personal
-GROUP BY e.nombre
-ORDER BY cantidad_proyectos DESC
-LIMIT 1;
-
--- 60. Costo total de proyectos por entidad:
-SELECT e.nombre AS entidad, SUM(pi.presupuesto) AS costo_total
-FROM Entidad e
-JOIN Personal p ON e.id = p.id
-JOIN Proyecto_Investigador pi ON p.id = pi.id_personal
-JOIN Proyecto_Investigacion p ON pi.id_proyecto = p.id
-GROUP BY e.nombre;
-
--- 61. Consultar la cantidad de visitantes por cada alojamiento.
-SELECT id_alojamiento, COUNT(id_visitante) AS cantidad_visitantes
-FROM Visitante_Alojamiento
-GROUP BY id_alojamiento;
-
--- 62. Consultar el promedio de sueldos del personal por cada rol.
-SELECT rol, AVG(sueldo) AS promedio_sueldo
+-- 56. Sueldos mínimos del personal por tipo
+SELECT rol, MIN(sueldo) AS sueldo_minimo
 FROM Personal
 GROUP BY rol;
 
--- 63. Consultar la cantidad de especies por cada área.
-SELECT id_area, COUNT(id_especie) AS cantidad_especies
-FROM Area_Especie
-GROUP BY id_area;
+-- 57. Promedio de sueldo del personal por departamento
+SELECT d.nombre AS departamento, AVG(pers.sueldo) AS sueldo_promedio
+FROM Departamento d
+JOIN Departamento_Parque dp ON d.id_departamento = dp.id_departamento
+JOIN Parque p ON dp.id_parque = p.id_parque
+JOIN Area a ON p.id_parque = a.id_parque
+JOIN Proyecto_Investigacion pi ON a.id_area = pi.id_proyecto
+JOIN Proyecto_Investigador pr ON pi.id_proyecto = pr.id_proyecto
+JOIN Personal pers ON pr.id_personal = pers.id_personal
+GROUP BY d.nombre;
 
--- 64. Consultar el total de visitantes por cada parque.
-SELECT Alojamiento.id_parque, COUNT(Visitante_Alojamiento.id_visitante) AS total_visitantes
-FROM Alojamiento
-JOIN Visitante_Alojamiento ON Alojamiento.id_alojamiento = Visitante_Alojamiento.id_alojamiento
-GROUP BY Alojamiento.id_parque;
+-- 58. Costos máximos de proyectos de investigación
+SELECT MAX(presupuesto) AS costo_maximo
+FROM Proyecto_Investigacion;
 
--- 65. Consultar la cantidad de proyectos de investigación por cada especie.
-SELECT id_especie, COUNT(id_proyecto) AS cantidad_proyectos
-FROM Proyecto_Especie
-GROUP BY id_especie;
+-- 59. Proyectos de investigación con menos de 3 especies involucradas
+SELECT pr.id_proyecto, COUNT(pe.id_especie) AS cantidad_especies
+FROM Proyecto_Investigacion pr
+JOIN Proyecto_Especie pe ON pr.id_proyecto = pe.id_proyecto
+GROUP BY pr.id_proyecto
+HAVING COUNT(pe.id_especie) < 3;
 
--- 66. Consultar el total de presupuesto por cada proyecto de investigación.
-SELECT id_proyecto, SUM(presupuesto) AS total_presupuesto
-FROM Proyecto_Investigacion
-GROUP BY id_proyecto;
+-- 60. Equipos de investigación con menos de 5 investigadores
+SELECT pr.id_proyecto, COUNT(pi.id_personal) AS cantidad_investigadores
+FROM Proyecto_Investigacion pr
+JOIN Proyecto_Investigador pi ON pr.id_proyecto = pi.id_proyecto
+GROUP BY pr.id_proyecto
+HAVING COUNT(pi.id_personal) < 5;
 
--- 67. Consultar la cantidad de alojamientos por cada parque.
-SELECT id_parque, COUNT(id_alojamiento) AS cantidad_alojamientos
-FROM Alojamiento
-GROUP BY id_parque;
+-- 61. Gestión de visitantes por parque con menos de 100 visitantes
+SELECT p.nombre AS parque, COUNT(v.id_visitante) AS cantidad_visitantes
+FROM Parque p
+JOIN Alojamiento a ON p.id_parque = a.id_parque
+JOIN Visitante_Alojamiento va ON a.id_alojamiento = va.id_alojamiento
+JOIN Visitante v ON va.id_visitante = v.id_visitante
+GROUP BY p.nombre
+HAVING COUNT(v.id_visitante) < 100;
 
--- 68. Consultar el total de visitantes por cada departamento.
-SELECT Departamento_Parque.id_departamento, COUNT(Visitante_Alojamiento.id_visitante) AS total_visitantes
-FROM Departamento_Parque
-JOIN Alojamiento ON Departamento_Parque.id_parque = Alojamiento.id_parque
-JOIN Visitante_Alojamiento ON Alojamiento.id_alojamiento = Visitante_Alojamiento.id_alojamiento
-GROUP BY Departamento_Parque.id_departamento;
+-- 62. Ocupación de alojamientos por parque con menos de 10 alojamientos
+SELECT p.nombre AS parque, COUNT(a.id_alojamiento) AS cantidad_alojamientos
+FROM Parque p
+JOIN Alojamiento a ON p.id_parque = a.id_parque
+GROUP BY p.nombre
+HAVING COUNT(a.id_alojamiento) < 10;
 
--- 69. Consultar el total de especies por cada departamento.
-SELECT Departamento_Parque.id_departamento, COUNT(DISTINCT Area_Especie.id_especie) AS total_especies
-FROM Departamento_Parque
-JOIN Alojamiento ON Departamento_Parque.id_parque = Alojamiento.id_parque
-JOIN Area_Especie ON Alojamiento.id_parque = Area_Especie.id_area
-GROUP BY Departamento_Parque.id_departamento;
+-- 63. Superficie máxima de áreas por parque
+SELECT p.nombre AS parque, MAX(a.superficie) AS superficie_maxima
+FROM Parque p
+JOIN Area a ON p.id_parque = a.id_parque
+GROUP BY p.nombre;
 
--- 70. Consultar el total de proyectos de investigación por cada departamento.
-SELECT Departamento_Parque.id_departamento, COUNT(DISTINCT Proyecto_Investigacion.id_proyecto) AS total_proyectos
-FROM Departamento_Parque
-JOIN Alojamiento ON Departamento_Parque.id_parque = Alojamiento.id_parque
-JOIN Proyecto_Investigacion ON Alojamiento.id_parque = Proyecto_Investigacion.id_proyecto
-GROUP BY Departamento_Parque.id_departamento;
-
--- 71. Consultar el total de personal por cada departamento.
-SELECT Departamento_Parque.id_departamento, COUNT(DISTINCT Personal.cedula) AS total_personal
-FROM Departamento_Parque
-JOIN Alojamiento ON Departamento_Parque.id_parque = Alojamiento.id_parque
-JOIN Proyecto_Investigador ON Alojamiento.id_parque = Proyecto_Investigador.id_proyecto
-JOIN Personal ON Proyecto_Investigador.id_personal = Personal.cedula
-GROUP BY Departamento_Parque.id_departamento;
-
--- 72. Consultar el total de visitantes por cada tipo de alojamiento.
-SELECT Alojamiento.categoria, COUNT(Visitante_Alojamiento.id_visitante) AS total_visitantes
-FROM Alojamiento
-JOIN Visitante_Alojamiento ON Alojamiento.id_alojamiento = Visitante_Alojamiento.id_alojamiento
-GROUP BY Alojamiento.categoria;
-
--- 73. Consultar el total de especies por cada tipo de área.
-SELECT Area_Especie.id_area, COUNT(DISTINCT Area_Especie.id_especie) AS total_especies
-FROM Area_Especie
-GROUP BY Area_Especie.id_area;
-
--- 74. Consultar el total de proyectos de investigación por cada tipo de área.
-SELECT Area_Especie.id_area, COUNT(DISTINCT Proyecto_Investigacion.id_proyecto) AS total_proyectos
-FROM Area_Especie
-JOIN Proyecto_Especie ON Area_Especie.id_especie = Proyecto_Especie.id_especie
-JOIN Proyecto_Investigacion ON Proyecto_Especie.id_proyecto = Proyecto_Investigacion.id_proyecto
-GROUP BY Area_Especie.id_area;
-
--- 75. Consultar el total de personal por cada tipo de área.
-SELECT Area_Especie.id_area, COUNT(DISTINCT Personal.cedula) AS total_personal
-FROM Area_Especie
-JOIN Proyecto_Especie ON Area_Especie.id_especie = Proyecto_Especie.id_especie
-JOIN Proyecto_Investigador ON Proyecto_Especie.id_proyecto = Proyecto_Investigador.id_proyecto
-JOIN Personal ON Proyecto_Investigador.id_personal = Personal.cedula
-GROUP BY Area_Especie.id_area;
-
--- 76. Consultar el total de visitantes por cada tipo de área.
-SELECT Area_Especie.id_area, COUNT(DISTINCT Visitante_Alojamiento.id_visitante) AS total_visitantes
-FROM Area_Especie
-JOIN Alojamiento ON Area_Especie.id_area = Alojamiento.id_parque
-JOIN Visitante_Alojamiento ON Alojamiento.id_alojamiento = Visitante_Alojamiento.id_alojamiento
-GROUP BY Area_Especie.id_area;
-
--- 77. Consultar el total de especies por cada tipo de alojamiento.
-SELECT Alojamiento.categoria, COUNT(DISTINCT Area_Especie.id_especie) AS total_especies
-FROM Alojamiento
-JOIN Area_Especie ON Alojamiento.id_parque = Area_Especie.id_area
-GROUP BY Alojamiento.categoria;
-
--- 78. Consultar el total de proyectos de investigación por cada tipo de alojamiento.
-SELECT Alojamiento.categoria, COUNT(DISTINCT Proyecto_Investigacion.id_proyecto) AS total_proyectos
-FROM Alojamiento
-JOIN Proyecto_Investigacion ON Alojamiento.id_parque = Proyecto_Investigacion.id_proyecto
-GROUP BY Alojamiento.categoria;
-
--- 79. Consultar el total de personal por cada tipo de alojamiento.
-SELECT Alojamiento.categoria, COUNT(DISTINCT Personal.cedula) AS total_personal
-FROM Alojamiento
-JOIN Proyecto_Investigador ON Alojamiento.id_parque = Proyecto_Investigador.id_proyecto
-JOIN Personal ON Proyecto_Investigador.id_personal = Personal.cedula
-GROUP BY Alojamiento.categoria;
-
--- 80. Consultar el total de visitantes por cada tipo de alojamiento.
-SELECT Alojamiento.categoria, COUNT(DISTINCT Visitante_Alojamiento.id_visitante) AS total_visitantes
-FROM Alojamiento
-JOIN Visitante_Alojamiento ON Alojamiento.id_alojamiento = Visitante_Alojamiento.id_alojamiento
-GROUP BY Alojamiento.categoria;
-
--- 81. Consultar el total de especies por cada tipo de parque.
-SELECT Alojamiento.id_parque, COUNT(DISTINCT Area_Especie.id_especie) AS total_especies
-FROM Alojamiento
-JOIN Area_Especie ON Alojamiento.id_parque = Area_Especie.id_area
-GROUP BY Alojamiento.id_parque;
-
--- 82. Consultar el total de proyectos de investigación por cada tipo de parque.
-SELECT Alojamiento.id_parque, COUNT(DISTINCT Proyecto_Investigacion.id_proyecto) AS total_proyectos
-FROM Alojamiento
-JOIN Proyecto_Investigacion ON Alojamiento.id_parque = Proyecto_Investigacion.id_proyecto
-GROUP BY Alojamiento.id_parque;
-
--- 83. Consultar el total de personal por cada tipo de parque.
-SELECT Alojamiento.id_parque, COUNT(DISTINCT Personal.cedula) AS total_personal
-FROM Alojamiento
-JOIN Proyecto_Investigador ON Alojamiento.id_parque = Proyecto_Investigador.id_proyecto
-JOIN Personal ON Proyecto_Investigador.id_personal = Personal.cedula
-GROUP BY Alojamiento.id_parque;
-
--- 84. Consultar el total de visitantes por cada tipo de parque.
-SELECT Alojamiento.id_parque, COUNT(DISTINCT Visitante_Alojamiento.id_visitante) AS total_visitantes
-FROM Alojamiento
-JOIN Visitante_Alojamiento ON Alojamiento.id_alojamiento = Visitante_Alojamiento.id_alojamiento
-GROUP BY Alojamiento.id_parque;
-
--- 85. Consultar el total de especies por cada tipo de departamento.
-SELECT Departamento_Parque.id_departamento, COUNT(DISTINCT Area_Especie.id_especie) AS total_especies
-FROM Departamento_Parque
-JOIN Alojamiento ON Departamento_Parque.id_parque = Alojamiento.id_parque
-JOIN Area_Especie ON Alojamiento.id_parque = Area_Especie.id_area
-GROUP BY Departamento_Parque.id_departamento;
-
--- 86. Consultar el total de proyectos de investigación por cada tipo de departamento.
-SELECT Departamento_Parque.id_departamento, COUNT(DISTINCT Proyecto_Investigacion.id_proyecto) AS total_proyectos
-FROM Departamento_Parque
-JOIN Alojamiento ON Departamento_Parque.id_parque = Alojamiento.id_parque
-JOIN Proyecto_Investigacion ON Alojamiento.id_parque = Proyecto_Investigacion.id_proyecto
-GROUP BY Departamento_Parque.id_departamento;
-
--- 87. Consultar el total de personal por cada tipo de departamento.
-SELECT Departamento_Parque.id_departamento, COUNT(DISTINCT Personal.cedula) AS total_personal
-FROM Departamento_Parque
-JOIN Alojamiento ON Departamento_Parque.id_parque = Alojamiento.id_parque
-JOIN Proyecto_Investigador ON Alojamiento.id_parque = Proyecto_Investigador.id_proyecto
-JOIN Personal ON Proyecto_Investigador.id_personal = Personal.cedula
-GROUP BY Departamento_Parque.id_departamento;
-
--- 88. Consultar el total de visitantes por cada tipo de departamento.
-SELECT Departamento_Parque.id_departamento, COUNT(DISTINCT Visitante_Alojamiento.id_visitante) AS total_visitantes
-FROM Departamento_Parque
-JOIN Alojamiento ON Departamento_Parque.id_parque = Alojamiento.id_parque
-JOIN Visitante_Alojamiento ON Alojamiento.id_alojamiento = Visitante_Alojamiento.id_alojamiento
-GROUP BY Departamento_Parque.id_departamento;
-
--- 89. Consultar el total de especies por cada tipo de entidad.
-SELECT Departamento_Entidad.id_entidad, COUNT(DISTINCT Area_Especie.id_especie) AS total_especies
-FROM Departamento_Entidad
-JOIN Departamento_Parque ON Departamento_Entidad.id_departamento = Departamento_Parque.id_departamento
-JOIN Alojamiento ON Departamento_Parque.id_parque = Alojamiento.id_parque
-JOIN Area_Especie ON Alojamiento.id_parque = Area_Especie.id_area
-GROUP BY Departamento_Entidad.id_entidad;
-
--- 90. Consultar el total de proyectos de investigación por cada tipo de entidad.
-SELECT Departamento_Entidad.id_entidad, COUNT(DISTINCT Proyecto_Investigacion.id_proyecto) AS total_proyectos
-FROM Departamento_Entidad
-JOIN Departamento_Parque ON Departamento_Entidad.id_departamento = Departamento_Parque.id_departamento
-JOIN Alojamiento ON Departamento_Parque.id_parque = Alojamiento.id_parque
-JOIN Proyecto_Investigacion ON Alojamiento.id_parque = Proyecto_Investigacion.id_proyecto
-GROUP BY Departamento_Entidad.id_entidad;
-
--- 91. Consultar el total de personal por cada tipo de entidad.
-SELECT Departamento_Entidad.id_entidad, COUNT(DISTINCT Personal.cedula) AS total_personal
-FROM Departamento_Entidad
-JOIN Departamento_Parque ON Departamento_Entidad.id_departamento = Departamento_Parque.id_departamento
-JOIN Alojamiento ON Departamento_Parque.id_parque = Alojamiento.id_parque
-JOIN Proyecto_Investigador ON Alojamiento.id_parque = Proyecto_Investigador.id_proyecto
-JOIN Personal ON Proyecto_Investigador.id_personal = Personal.cedula
-GROUP BY Departamento_Entidad.id_entidad;
-
--- 92. Consultar el total de visitantes por cada tipo de entidad.
-SELECT Departamento_Entidad.id_entidad, COUNT(DISTINCT Visitante_Alojamiento.id_visitante) AS total_visitantes
-FROM Departamento_Entidad
-JOIN Departamento_Parque ON Departamento_Entidad.id_departamento = Departamento_Parque.id_departamento
-JOIN Alojamiento ON Departamento_Parque.id_parque = Alojamiento.id_parque
-JOIN Visitante_Alojamiento ON Alojamiento.id_alojamiento = Visitante_Alojamiento.id_alojamiento
-GROUP BY Departamento_Entidad.id_entidad;
-
--- 93. Consultar el total de especies por cada tipo de proyecto.
-SELECT Proyecto_Investigacion.id_proyecto, COUNT(DISTINCT Area_Especie.id_especie) AS total_especies
-FROM Proyecto_Investigacion
-JOIN Proyecto_Especie ON Proyecto_Investigacion.id_proyecto = Proyecto_Especie.id_proyecto
-JOIN Area_Especie ON Proyecto_Especie.id_especie = Area_Especie.id_especie
-GROUP BY Proyecto_Investigacion.id_proyecto;
-
--- 94. Consultar el total de personal por cada tipo de proyecto.
-SELECT Proyecto_Investigacion.id_proyecto, COUNT(DISTINCT Personal.cedula) AS total_personal
-FROM Proyecto_Investigacion
-JOIN Proyecto_Investigador ON Proyecto_Investigacion.id_proyecto = Proyecto_Investigador.id_proyecto
-JOIN Personal ON Proyecto_Investigador.id_personal = Personal.cedula
-GROUP BY Proyecto_Investigacion.id_proyecto;
-
--- 95. Consultar el total de visitantes por cada tipo de proyecto.
-SELECT Proyecto_Investigacion.id_proyecto, COUNT(DISTINCT Visitante_Alojamiento.id_visitante) AS total_visitantes
-FROM Proyecto_Investigacion
-JOIN Alojamiento ON Proyecto_Investigacion.id_proyecto = Alojamiento.id_parque
-JOIN Visitante_Alojamiento ON Alojamiento.id_alojamiento = Visitante_Alojamiento.id_alojamiento
-GROUP BY Proyecto_Investigacion.id_proyecto;
-
--- 96. Consultar el total de especies por cada tipo de personal.
-SELECT Personal.rol, COUNT(DISTINCT Area_Especie.id_especie) AS total_especies
-FROM Personal
-JOIN Proyecto_Investigador ON Personal.cedula = Proyecto_Investigador.id_personal
-JOIN Proyecto_Especie ON Proyecto_Investigador.id_proyecto = Proyecto_Especie.id_proyecto
-JOIN Area_Especie ON Proyecto_Especie.id_especie = Area_Especie.id_especie
-GROUP BY Personal.rol;
-
--- 97. Consultar el total de proyectos de investigación por cada tipo de personal.
-SELECT Personal.rol, COUNT(DISTINCT Proyecto_Investigacion.id_proyecto) AS total_proyectos
-FROM Personal
-JOIN Proyecto_Investigador ON Personal.cedula = Proyecto_Investigador.id_personal
-JOIN Proyecto_Investigacion ON Proyecto_Investigador.id_proyecto = Proyecto_Investigacion.id_proyecto
-GROUP BY Personal.rol;
-
--- 98. Consultar el total de visitantes por cada tipo de personal.
-SELECT Personal.rol, COUNT(DISTINCT Visitante_Alojamiento.id_visitante) AS total_visitantes
-FROM Personal
-JOIN Proyecto_Investigador ON Personal.cedula = Proyecto_Investigador.id_personal
-JOIN Alojamiento ON Proyecto_Investigador.id_proyecto = Alojamiento.id_parque
-JOIN Visitante_Alojamiento ON Alojamiento.id_alojamiento = Visitante_Alojamiento.id_alojamiento
-GROUP BY Personal.rol;
-
--- 99. Consultar el total de especies por cada tipo de visitante.
-SELECT Visitante.profesion, COUNT(DISTINCT Area_Especie.id_especie) AS total_especies
+-- 64. Total de visitantes por día de la semana
+SELECT DAYOFWEEK(fecha_entrada) AS dia_semana, COUNT(id_visitante) AS cantidad_visitantes
 FROM Visitante
-JOIN Visitante_Alojamiento ON Visitante.cedula = Visitante_Alojamiento.id_visitante
-JOIN Alojamiento ON Visitante_Alojamiento.id_alojamiento = Alojamiento.id_alojamiento
-JOIN Area_Especie ON Alojamiento.id_parque = Area_Especie.id_area
-GROUP BY Visitante.profesion;
+GROUP BY DAYOFWEEK(fecha_entrada);
 
--- 100. Consultar el total de proyectos de investigación por cada tipo de visitante.
-SELECT Visitante.profesion, COUNT(DISTINCT Proyecto_Investigacion.id_proyecto) AS total_proyectos
+-- 65. Total de visitantes por trimestre
+SELECT QUARTER(fecha_entrada) AS trimestre, COUNT(id_visitante) AS cantidad_visitantes
 FROM Visitante
-JOIN Visitante_Alojamiento ON Visitante.cedula = Visitante_Alojamiento.id_visitante
-JOIN Alojamiento ON Visitante_Alojamiento.id_alojamiento = Alojamiento.id_alojamiento
-JOIN Proyecto_Investigacion ON Alojamiento.id_parque = Proyecto_Investigacion.id_proyecto
-GROUP BY Visitante.profesion;
+GROUP BY QUARTER(fecha_entrada);
+
+-- 66. Especies más raras en áreas
+SELECT e.nombre_vulgar AS especie, COUNT(ae.id_area) AS cantidad_areas
+FROM Especie e
+JOIN Area_Especie ae ON e.id_especie = ae.id_especie
+GROUP BY e.nombre_vulgar
+ORDER BY cantidad_areas ASC
+LIMIT 5;
+
+-- 67. Personal con sueldos entre 2000 y 5000
+SELECT nombre, sueldo
+FROM Personal
+WHERE sueldo BETWEEN 2000 AND 5000;
+
+-- 68. Proyectos de investigación con duración menor a 6 meses
+SELECT id_proyecto, DATEDIFF(fecha_fin, fecha_inicio) AS duracion_dias
+FROM Proyecto_Investigacion
+WHERE DATEDIFF(fecha_fin, fecha_inicio) < 180;
+
+-- 69. Duración mínima de proyectos de investigación
+SELECT MIN(DATEDIFF(fecha_fin, fecha_inicio)) AS duracion_minima
+FROM Proyecto_Investigacion;
+
+-- 70. Total de especies por proyecto de investigación con menos de 5 especies
+SELECT pr.id_proyecto, COUNT(pe.id_especie) AS cantidad_especies
+FROM Proyecto_Investigacion pr
+JOIN Proyecto_Especie pe ON pr.id_proyecto = pe.id_proyecto
+GROUP BY pr.id_proyecto
+HAVING COUNT(pe.id_especie) < 5;
+
+-- 71. Total de áreas por parque con menos de 3 áreas
+SELECT p.nombre AS parque, COUNT(a.id_area) AS cantidad_areas
+FROM Parque p
+JOIN Area a ON p.id_parque = a.id_parque
+GROUP BY p.nombre
+HAVING COUNT(a.id_area) < 3;
+
+-- 72. Total de especies por parque con menos de 10 especies
+SELECT p.nombre AS parque, COUNT(DISTINCT ae.id_especie) AS cantidad_especies
+FROM Parque p
+JOIN Area a ON p.id_parque = a.id_parque
+JOIN Area_Especie ae ON a.id_area = ae.id_area
+GROUP BY p.nombre
+HAVING COUNT(DISTINCT ae.id_especie) < 10;
+
+-- 73. Personal asignado a solo un proyecto de investigación
+SELECT p.nombre AS personal, COUNT(pi.id_proyecto) AS cantidad_proyectos
+FROM Personal p
+JOIN Proyecto_Investigador pi ON p.id_personal = pi.id_personal
+GROUP BY p.nombre
+HAVING COUNT(pi.id_proyecto) = 1;
+
+-- 74. Visitantes por profesión con menos de 10 visitantes
+SELECT profesion, COUNT(id_visitante) AS cantidad_visitantes
+FROM Visitante
+GROUP BY profesion
+HAVING COUNT(id_visitante) < 10;
+
+-- 75. Promedio de ocupación de alojamientos por parque con menos de 5 alojamientos
+SELECT p.nombre AS parque, AVG(a.capacidad) AS capacidad_promedio
+FROM Parque p
+JOIN Alojamiento a ON p.id_parque = a.id_parque
+GROUP BY p.nombre
+HAVING COUNT(a.id_alojamiento) < 5;
+
+-- 76. Cantidad de parques por departamento con más de 10 parques
+SELECT d.nombre AS departamento, COUNT(p.id_parque) AS cantidad_parques
+FROM Departamento d
+JOIN Departamento_Parque dp ON d.id_departamento = dp.id_departamento
+JOIN Parque p ON dp.id_parque = p.id_parque
+GROUP BY d.nombre
+HAVING COUNT(p.id_parque) > 10;
+
+-- 77. Superficie total de parques por departamento con más de 2000 hectáreas
+SELECT d.nombre AS departamento, SUM(a.superficie) AS superficie_total
+FROM Departamento d
+JOIN Departamento_Parque dp ON d.id_departamento = dp.id_departamento
+JOIN Parque p ON dp.id_parque = p.id_parque
+JOIN Area a ON p.id_parque = a.id_parque
+GROUP BY d.nombre
+HAVING SUM(a.superficie) > 2000;
+
+-- 78. Inventario de especies por área con más de 20 especies
+SELECT a.nombre AS area, COUNT(ae.id_especie) AS cantidad_especies
+FROM Area a
+JOIN Area_Especie ae ON a.id_area = ae.id_area
+GROUP BY a.nombre
+HAVING COUNT(ae.id_especie) > 20;
+
+-- 79. Especies por área ordenadas por cantidad de inventario descendente
+SELECT a.nombre AS area, e.nombre_vulgar AS especie, ae.cantidad_inventario
+FROM Area a
+JOIN Area_Especie ae ON a.id_area = ae.id_area
+JOIN Especie e ON ae.id_especie = e.id_especie
+ORDER BY ae.cantidad_inventario DESC;
+
+-- 80. Actividades del personal por tipo con más de 10 empleados
+SELECT rol, COUNT(id_personal) AS cantidad_personal
+FROM Personal
+GROUP BY rol
+HAVING COUNT(id_personal) > 10;
+
+-- 81. Sueldos máximos del personal por tipo
+SELECT rol, MAX(sueldo) AS sueldo_maximo
+FROM Personal
+GROUP BY rol;
+
+-- 82. Total de visitantes por parque y mes:
+SELECT p.nombre AS parque, MONTH(v.fecha_entrada) AS mes, COUNT(v.id_visitante) AS cantidad_visitantes
+FROM Parque p
+JOIN Alojamiento a ON p.id_parque = a.id_parque
+JOIN Visitante_Alojamiento va ON a.id_alojamiento = va.id_alojamiento
+JOIN Visitante v ON va.id_visitante = v.id_visitante
+GROUP BY p.nombre, MONTH(v.fecha_entrada);
+
+-- 83. Costos mínimos de proyectos de investigación
+SELECT MIN(presupuesto) AS costo_minimo
+FROM Proyecto_Investigacion;
+
+-- 84. Proyectos de investigación con más de 5 especies involucradas
+SELECT pr.id_proyecto, COUNT(pe.id_especie) AS cantidad_especies
+FROM Proyecto_Investigacion pr
+JOIN Proyecto_Especie pe ON pr.id_proyecto = pe.id_proyecto
+GROUP BY pr.id_proyecto
+HAVING COUNT(pe.id_especie) > 5;
+
+-- 85. Equipos de investigación con más de 10 investigadores
+SELECT pr.id_proyecto, COUNT(pi.id_personal) AS cantidad_investigadores
+FROM Proyecto_Investigacion pr
+JOIN Proyecto_Investigador pi ON pr.id_proyecto = pi.id_proyecto
+GROUP BY pr.id_proyecto
+HAVING COUNT(pi.id_personal) > 10;
+
+-- 86. Gestión de visitantes por parque con más de 200 visitantes
+SELECT p.nombre AS parque, COUNT(v.id_visitante) AS cantidad_visitantes
+FROM Parque p
+JOIN Alojamiento a ON p.id_parque = a.id_parque
+JOIN Visitante_Alojamiento va ON a.id_alojamiento = va.id_alojamiento
+JOIN Visitante v ON va.id_visitante = v.id_visitante
+GROUP BY p.nombre
+HAVING COUNT(v.id_visitante) > 200;
+
+-- 87. Ocupación de alojamientos por parque con más de 20 alojamientos
+SELECT p.nombre AS parque, COUNT(a.id_alojamiento) AS cantidad_alojamientos
+FROM Parque p
+JOIN Alojamiento a ON p.id_parque = a.id_parque
+GROUP BY p.nombre
+HAVING COUNT(a.id_alojamiento) > 20;
+
+-- 88. Superficie promedio de áreas por parque con más de 5 áreas
+SELECT p.nombre AS parque, AVG(a.superficie) AS superficie_promedio
+FROM Parque p
+JOIN Area a ON p.id_parque = a.id_parque
+GROUP BY p.nombre
+HAVING COUNT(a.id_area) > 5;
+
+-- 89. Total de visitantes por día del mes
+SELECT DAY(fecha_entrada) AS dia_mes, COUNT(id_visitante) AS cantidad_visitantes
+FROM Visitante
+GROUP BY DAY(fecha_entrada);
+
+-- 90. Total de visitantes por semestre
+SELECT IF(MONTH(fecha_entrada) <= 6, 'Primer Semestre', 'Segundo Semestre') AS semestre, COUNT(id_visitante) AS cantidad_visitantes
+FROM Visitante
+GROUP BY semestre;
+
+-- 91. Especies más comunes en áreas con más de 5 áreas
+SELECT e.nombre_vulgar AS especie, COUNT(ae.id_area) AS cantidad_areas
+FROM Especie e
+JOIN Area_Especie ae ON e.id_especie = ae.id_especie
+GROUP BY e.nombre_vulgar
+HAVING COUNT(ae.id_area) > 5
+ORDER BY cantidad_areas DESC;
+
+-- 92. Personal con sueldos mayores a 5000
+SELECT nombre, sueldo
+FROM Personal
+WHERE sueldo > 5000;
+
+-- 93. Proyectos de investigación con duración mayor a 1 año
+SELECT id_proyecto, DATEDIFF(fecha_fin, fecha_inicio) AS duracion_dias
+FROM Proyecto_Investigacion
+WHERE DATEDIFF(fecha_fin, fecha_inicio) > 365;
+
+-- 94. Total de proyectos de investigación por parque:
+SELECT p.nombre AS parque, COUNT(DISTINCT pi.id_proyecto) AS cantidad_proyectos
+FROM Parque p
+JOIN Area a ON p.id_parque = a.id_parque
+JOIN Area_Especie ae ON a.id_area = ae.id_area
+JOIN Proyecto_Especie pe ON ae.id_especie = pe.id_especie
+JOIN Proyecto_Investigacion pi ON pe.id_proyecto = pi.id_proyecto
+GROUP BY p.nombre;
+
+-- 95. Total de especies por proyecto de investigación con más de 10 especies
+SELECT pr.id_proyecto, COUNT(pe.id_especie) AS cantidad_especies
+FROM Proyecto_Investigacion pr
+JOIN Proyecto_Especie pe ON pr.id_proyecto = pe.id_proyecto
+GROUP BY pr.id_proyecto
+HAVING COUNT(pe.id_especie) > 10;
+
+-- 96. Total de áreas por parque con más de 5 áreas
+SELECT p.nombre AS parque, COUNT(a.id_area) AS cantidad_areas
+FROM Parque p
+JOIN Area a ON p.id_parque = a.id_parque
+GROUP BY p.nombre
+HAVING COUNT(a.id_area) > 5;
+
+-- 97. Total de especies por parque con más de 20 especies
+SELECT p.nombre AS parque, COUNT(DISTINCT ae.id_especie) AS cantidad_especies
+FROM Parque p
+JOIN Area a ON p.id_parque = a.id_parque
+JOIN Area_Especie ae ON a.id_area = ae.id_area
+GROUP BY p.nombre
+HAVING COUNT(DISTINCT ae.id_especie) > 20;
+
+-- 98. Personal asignado a más de dos proyectos de investigación
+SELECT p.nombre AS personal, COUNT(pi.id_proyecto) AS cantidad_proyectos
+FROM Personal p
+JOIN Proyecto_Investigador pi ON p.id_personal = pi.id_personal
+GROUP BY p.nombre
+HAVING COUNT(pi.id_proyecto) > 2;
+
+-- 99. Visitantes por profesión con más de 20 visitantes
+SELECT profesion, COUNT(id_visitante) AS cantidad_visitantes
+FROM Visitante
+GROUP BY profesion
+HAVING COUNT(id_visitante) > 20;
+
+-- 100. Promedio de ocupación de alojamientos por parque con más de 10 alojamientos
+SELECT p.nombre AS parque, AVG(a.capacidad) AS capacidad_promedio
+FROM Parque p
+JOIN Alojamiento a ON p.id_parque = a.id_parque
+GROUP BY p.nombre
+HAVING COUNT(a.id_alojamiento) > 10;
+
+-- Hecho por: Ytzhak Carvajal

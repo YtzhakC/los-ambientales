@@ -228,3 +228,5 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON ambientalistas.Alojamiento TO 'encargado
 -- Aplicar los cambios
 FLUSH PRIVILEGES;
 -- || ----------------------------------------------------------------- ||
+
+-- Hecho por: Ytzhak Carvajal

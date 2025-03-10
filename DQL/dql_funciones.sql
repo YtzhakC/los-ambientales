@@ -261,3 +261,5 @@ SELECT GetCategoriaAlojamiento(1);
 
 -- Función 20
 SELECT GetFechaIngresoAlojamiento(1);
+
+-- Hecho por: Ytzhak Carvajal

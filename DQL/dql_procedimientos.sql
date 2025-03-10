@@ -194,3 +194,5 @@ CALL DeleteDepartamento(1);
 
 -- 20. Llamada al procedimiento DeleteEntidad
 CALL DeleteEntidad(1);
+
+-- Hecho por: Ytzhak Carvajal

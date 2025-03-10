@@ -168,3 +168,6 @@ LosAmbientales
 │   └── Diagrama.jpg              # Modelo de datos (diagrama entidad-relación)
 └── README.md                     # Documentación del proyecto
 ```
+```
+Proyecto de MySQL II, realizado por Ytzhak Carvajal.
+```
