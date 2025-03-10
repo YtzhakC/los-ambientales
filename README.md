@@ -98,22 +98,22 @@ Algunos ejemplos de consultas SQL implementadas son:
 
 - **Procedimientos Almacenados**  
   Ejemplos:
-  - `sp_registrar_parque`: Registra un nuevo parque natural.
-  - `sp_actualizar_area`: Actualiza la información de una determinada área.
+  - `AddDepartamento`: Agrega un nuevo departamento.
+  - `AddParque`: Registra un nuevo parque natural.
   
 - **Funciones SQL**  
   Ejemplos:
-  - `fn_superficie_total_parque(departamento_id)`: Calcula la suma de las áreas de los parques de un departamento.
-  - `fn_inventario_especies(area_id)`: Retorna el inventario total de especies en una determinada área.
+  - `GetNombreDepartamento(id)`: Obtiene el nombre de un departamento por su ID.
+  - `GetNombreParque(id)`: Obtiene el nombre de un parque por su ID.
 
 - **Triggers**  
   Se han implementado triggers para:
-  - Actualizar automáticamente el inventario de especies al registrar o modificar datos en las áreas.
-  - Registrar movimientos y cambios en el salario del personal.
+  - Actualizar automáticamente la fecha de modificación al actualizar registros.
+  - Registrar movimientos y cambios en las tablas de auditoría.
 
 - **Eventos**  
   Ejemplos:
-  - Generar reportes semanales de visitantes y ocupación de alojamientos.
+  - Limpiar registros antiguos de visitantes y alojamientos.
   - Actualizar periódicamente los inventarios de especies.
 
 ---
