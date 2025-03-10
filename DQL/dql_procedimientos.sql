@@ -1,3 +1,5 @@
+USE ambientalistas;
+
 DELIMITER //
 
 -- Procedimiento 1: Agregar un departamento
@@ -72,10 +74,10 @@ BEGIN
     INSERT INTO Departamento_Entidad (id_departamento, id_entidad) VALUES (id_departamento, id_entidad);
 END //
 
--- Procedimiento 13: Agregar una relación entre área y especie
-CREATE PROCEDURE AddAreaEspecie(IN id_area INT, IN id_especie INT, IN cantidad_inventario INT)
+-- Procedimiento 13: Actualizar la capacidad de un alojamiento
+CREATE PROCEDURE UpdateAlojamientoCapacidad(IN id_alojamiento INT, IN nueva_capacidad INT)
 BEGIN
-    INSERT INTO Area_Especie (id_area, id_especie, cantidad_inventario) VALUES (id_area, id_especie, cantidad_inventario);
+    UPDATE Alojamiento SET capacidad = nueva_capacidad WHERE id_alojamiento = id_alojamiento;
 END //
 
 -- Procedimiento 14: Agregar una relación entre proyecto de investigación e investigador
@@ -108,11 +110,22 @@ BEGIN
     UPDATE Entidad SET nombre = nuevo_nombre WHERE id_entidad = id_entidad;
 END //
 
--- Procedimiento 19: Eliminar un departamento
+-- Procedimiento 19: Eliminar un departamento y sus dependencias
 CREATE PROCEDURE DeleteDepartamento(IN id_departamento INT)
 BEGIN
+    -- Eliminar filas dependientes en la tabla Departamento_Entidad
+    DELETE FROM Departamento_Entidad WHERE id_departamento = id_departamento;
+    
+    -- Eliminar filas dependientes en la tabla Departamento_Parque
+    DELETE FROM Departamento_Parque WHERE id_departamento = id_departamento;
+    
+    -- Eliminar filas dependientes en la tabla Auditoria_Departamento
+    DELETE FROM Auditoria_Departamento WHERE id_departamento = id_departamento;
+    
+    -- Eliminar el departamento
     DELETE FROM Departamento WHERE id_departamento = id_departamento;
 END //
+
 
 -- Procedimiento 20: Eliminar una entidad
 CREATE PROCEDURE DeleteEntidad(IN id_entidad INT)
@@ -122,62 +135,62 @@ END //
 
 DELIMITER ;
 
--- Procedimiento 1
-CALL AddDepartamento('Nuevo Departamento');
+-- 1. Llamada al procedimiento AddDepartamento
+CALL AddDepartamento('Departamento Ejemplo');
 
--- Procedimiento 2
-CALL AddEntidad('Nueva Entidad');
+-- 2. Llamada al procedimiento AddEntidad
+CALL AddEntidad('Entidad Ejemplo');
 
--- Procedimiento 3
-CALL AddParque('Nuevo Parque', '2025-03-09');
+-- 3. Llamada al procedimiento AddParque
+CALL AddParque('Parque Ejemplo', '2025-03-09');
 
--- Procedimiento 4
-CALL AddArea(1, 'Nueva Área', 100.00);
+-- 4. Llamada al procedimiento AddArea
+CALL AddArea(1, 'Area Ejemplo', 123.45);
 
--- Procedimiento 5
-CALL AddEspecie('Nuevo Nombre Científico', 'Nuevo Nombre Vulgar');
+-- 5. Llamada al procedimiento AddEspecie
+CALL AddEspecie('Especie Cientifica Ejemplo', 'Especie Vulgar Ejemplo');
 
--- Procedimiento 6
-CALL AddPersonal('1234567890', 'Nuevo Personal', 'Nueva Dirección', '1234567', '987654321', 2000.00, 'Gestión');
+-- 6. Llamada al procedimiento AddPersonal
+CALL AddPersonal('12345678', 'Nombre Ejemplo', 'Direccion Ejemplo', '123456789', '987654321', 1500.00, 'Investigación');
 
--- Procedimiento 7
-CALL AddVehiculo('Nuevo Tipo', 'Nueva Marca');
+-- 7. Llamada al procedimiento AddVehiculo
+CALL AddVehiculo('Tipo Ejemplo', 'Marca Ejemplo');
 
--- Procedimiento 8
-CALL AddProyectoInvestigacion(100000.00, '2025-03-09', '2025-09-09');
+-- 8. Llamada al procedimiento AddProyectoInvestigacion
+CALL AddProyectoInvestigacion(10000.00, '2025-01-01', '2025-12-31');
 
--- Procedimiento 9
-CALL AddVisitante('1234567890', 'Nuevo Visitante', 'Nueva Dirección', 'Nueva Profesión', '2025-03-09', '2025-03-10');
+-- 9. Llamada al procedimiento AddVisitante
+CALL AddVisitante('87654321', 'Visitante Ejemplo', 'Direccion Ejemplo', 'Profesion Ejemplo', '2025-03-01', '2025-03-10');
 
--- Procedimiento 10
-CALL AddAlojamiento(1, 10, 'Nueva Categoría', '2025-03-09', '2025-03-10');
+-- 10. Llamada al procedimiento AddAlojamiento
+CALL AddAlojamiento(1, 4, 'Categoria Ejemplo', '2025-03-01', '2025-03-10');
 
--- Procedimiento 11
+-- 11. Llamada al procedimiento AddDepartamentoParque
 CALL AddDepartamentoParque(1, 1);
 
--- Procedimiento 12
+-- 12. Llamada al procedimiento AddDepartamentoEntidad
 CALL AddDepartamentoEntidad(1, 1);
 
--- Procedimiento 13
-CALL AddAreaEspecie(1, 1, 10);
+-- 13. Llamada al procedimiento UpdateAlojamientoCapacidad
+CALL UpdateAlojamientoCapacidad(1, 50);
 
--- Procedimiento 14
-CALL AddProyectoInvestigador(1, 1);
+-- 14. Llamada al procedimiento AddProyectoInvestigador
+CALL AddProyectoInvestigador(50, 1);
 
--- Procedimiento 15
-CALL AddProyectoEspecie(1, 1);
+-- 15. Llamada al procedimiento AddProyectoEspecie
+CALL AddProyectoEspecie(50, 1);
 
--- Procedimiento 16
-CALL AddVisitanteAlojamiento(1, 1);
+-- 16. Llamada al procedimiento AddVisitanteAlojamiento
+CALL AddVisitanteAlojamiento(10, 1);
 
--- Procedimiento 17
-CALL UpdateDepartamento(1, 'Departamento Actualizado');
+-- 17. Llamada al procedimiento UpdateDepartamentoNombre
+CALL UpdateDepartamentoNombre(1, 'Nuevo Nombre Departamento');
 
--- Procedimiento 18
-CALL UpdateEntidad(1, 'Entidad Actualizada');
+-- 18. Llamada al procedimiento UpdateEntidadNombre
+CALL UpdateEntidadNombre(1, 'Nuevo Nombre Entidad');
 
--- Procedimiento 19
-CALL UpdateParque(1, 'Parque Actualizado', '2025-03-09');
+-- 19. Llamada al procedimiento DeleteDepartamento
+CALL DeleteDepartamento(1);
 
--- Procedimiento 20
-CALL UpdateArea(1, 1, 'Área Actualizada', 200.00);
+-- 20. Llamada al procedimiento DeleteEntidad
+CALL DeleteEntidad(1);
